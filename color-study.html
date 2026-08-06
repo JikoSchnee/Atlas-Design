@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ATLAS / 色彩研究</title>
+    <title>ATLAS / Chromatic Study</title>
     <style>
       /* Bundled locally with this Atlas study. */
       @font-face {
@@ -73,20 +73,24 @@
       .hero-scroll::after { display: block; width: 1px; height: 55px; margin: 12px auto 0; content: ""; background: linear-gradient(var(--ice), transparent); }
       .atlas-copy, .atlas-telemetry, .hero-scroll { display: none; }
       .study { display: grid; grid-template-columns: minmax(300px, .92fr) minmax(400px, 1.3fr); max-width: 1320px; margin: auto; padding: 0 clamp(24px, 5vw, 80px); }
-      .orb-zone { position: relative; display: grid; min-height: 590px; place-items: center; overflow: hidden; border-right: 1px solid rgba(247, 244, 232, .23); }
-      .orb-zone::before, .orb-zone::after { position: absolute; content: ""; border: 1px solid rgba(255, 99, 81, .42); transform: rotate(45deg); }
+      .orb-zone { isolation: isolate; position: relative; display: grid; min-height: 590px; place-items: center; overflow: hidden; border-right: 1px solid rgba(247, 244, 232, .23); }
+      .orb-zone::before, .orb-zone::after { position: absolute; z-index: 0; content: ""; border: 1px solid rgba(255, 99, 81, .42); pointer-events: none; transform: rotate(45deg); }
       .orb-zone::before { width: 62%; aspect-ratio: 1; }
       .orb-zone::after { width: 46%; aspect-ratio: 1; border-color: rgba(247, 244, 232, .16); }
-      .orb { position: relative; width: clamp(180px, 23vw, 305px); aspect-ratio: 1; border-radius: 47% 53% 51% 49% / 54% 47% 53% 46%; background: radial-gradient(circle at 36% 29%, var(--corona) 0 2%, #d91720 9%, var(--signal) 25%, #8c111b 64%, #300c15 100%); box-shadow: 0 0 22px rgba(250, 42, 41, .95), 0 0 82px rgba(250, 42, 41, .45), inset -26px -24px 45px rgba(17, 5, 12, .64); transform: rotate(-15deg); }
-      .orb::after { position: absolute; inset: 0; content: ""; border-radius: inherit; opacity: .34; background: repeating-conic-gradient(from 18deg, transparent 0 8deg, rgba(255, 178, 142, .35) 8.2deg 9deg, transparent 9.3deg 18deg); mix-blend-mode: screen; }
-      .orb-label { position: absolute; bottom: 34px; left: 36px; margin: 0; color: var(--corona); font-size: 10px; line-height: 1.8; }
+      .orb-core { position: relative; z-index: 1; width: clamp(230px, 27vw, 370px); aspect-ratio: 1; }
+      .orb-core__canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s ease; }
+      .orb-core.is-webgl .orb-core__canvas { opacity: 1; }
+      .orb-core__fallback { position: absolute; inset: 12%; border-radius: 48% 52% 55% 45% / 52% 43% 57% 48%; background: radial-gradient(circle at 68% 27%, rgba(255, 33, 29, .72), #391015 22%, #0d0f14 52%, #030407 74%); box-shadow: 0 0 40px rgba(250, 42, 41, .18), inset -22px -20px 38px #000; transition: opacity .5s ease; }
+      .orb-core.is-webgl .orb-core__fallback { opacity: 0; }
+      .orb-label { position: absolute; z-index: 2; bottom: 34px; left: 36px; margin: 0; color: var(--corona); font-size: 10px; line-height: 1.8; }
       .palette { padding: clamp(30px, 5vw, 75px); }
       .palette h2 { margin: 0 0 13px; color: var(--star); font-size: 13px; font-weight: 400; text-transform: uppercase; }
       .palette > p { max-width: 540px; margin: 0 0 40px; color: #bdc4cb; font-size: 13px; line-height: 1.7; letter-spacing: .04em; }
       .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(247, 244, 232, .23); border: 1px solid rgba(247, 244, 232, .23); }
-      button { position: relative; min-height: 146px; padding: 15px; overflow: hidden; border: 0; color: var(--star); background: var(--swatch); text-align: left; font: inherit; cursor: copy; transition: transform .22s ease, z-index .22s ease; }
-      button:hover, button:focus-visible { z-index: 1; outline: 1px solid var(--star); transform: scale(1.035); }
-      button::after { position: absolute; right: 12px; bottom: 11px; content: attr(data-hex); color: color-mix(in srgb, var(--swatch), white 72%); font-size: 10px; }
+      button { position: relative; min-height: 146px; padding: 15px; overflow: hidden; border: 0; color: var(--swatch-ink, var(--star)); background: var(--swatch); text-align: left; font: inherit; cursor: copy; transition: transform .22s ease, z-index .22s ease; }
+      button:hover, button:focus-visible { z-index: 1; outline: 1px solid var(--swatch-ink, var(--star)); transform: scale(1.035); }
+      button::after { position: absolute; right: 12px; bottom: 11px; content: attr(data-hex); color: var(--swatch-meta, color-mix(in srgb, var(--swatch), white 72%)); font-size: 10px; }
+      button.is-light { --swatch-ink: #07080d; --swatch-meta: rgba(7, 8, 13, .68); }
       button span { display: block; max-width: 100px; font-size: 11px; line-height: 1.4; text-transform: uppercase; }
       .note { display: flex; gap: 10px; align-items: center; margin: 23px 0 0; color: var(--ice); font-size: 10px; }
       .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 12px var(--signal); }
@@ -106,9 +110,9 @@
       .boundary-stage::before { position: absolute; inset: 0; content: ""; opacity: .16; background-image: linear-gradient(rgba(247, 244, 232, .14) 1px, transparent 1px), linear-gradient(90deg, rgba(247, 244, 232, .14) 1px, transparent 1px); background-size: 72px 72px; mask-image: linear-gradient(135deg, black, transparent 74%); }
       .boundary-art { position: absolute; inset: 0; width: 100%; height: 100%; }
       .boundary-art use { fill: none; stroke-linecap: round; }
-      .boundary-art .glow-wide { stroke: rgba(250, 22, 31, .55); stroke-width: 34; filter: blur(22px); }
-      .boundary-art .glow-core { stroke: #ff1825; stroke-width: 17; filter: blur(8px); }
-      .boundary-art .white-edge { fill: none; stroke: #fffdf4; stroke-width: 2.3; filter: drop-shadow(0 0 2px rgba(255, 255, 255, .8)); }
+      .boundary-art .glow-wide { stroke: rgba(250, 22, 31, .55); stroke-width: 34; }
+      .boundary-art .glow-core { stroke: #ff1825; stroke-width: 17; }
+      .boundary-art .white-edge { fill: none; stroke: #fffdf4; stroke-width: 2.3; }
       .boundary-art .spec-label { fill: rgba(247, 244, 232, .48); font: 300 10px "GeosansLight-NMS", sans-serif; letter-spacing: .22em; text-transform: uppercase; }
       .boundary-art .spec-number { fill: var(--corona); font: 300 9px "GeosansLight-NMS", sans-serif; letter-spacing: .14em; }
       .boundary-art .divider { stroke: rgba(247, 244, 232, .14); stroke-width: 1; stroke-dasharray: 3 11; }
@@ -120,7 +124,7 @@
       footer { max-width: 1320px; margin: auto; padding: 18px clamp(24px, 5vw, 80px); color: #78818d; font-size: 9px; line-height: 1.8; letter-spacing: .04em; }
       footer a { color: var(--ice); }
       @keyframes fallback-drift { to { transform: rotate(1turn) scale(.93); } }
-      @media (prefers-reduced-motion: reduce) { .atlas-fallback::before { animation: none; } #atlas-canvas { display: none; } .atlas-fallback { opacity: 1 !important; } .boundary-stage, .boundary-stage:hover, .glyph, .glyph:hover { transition: none; } }
+      @media (prefers-reduced-motion: reduce) { .atlas-fallback::before { animation: none; } #atlas-canvas, .orb-core__canvas { display: none; } .atlas-fallback, .orb-core__fallback { opacity: 1 !important; } .boundary-stage, .boundary-stage:hover, .glyph, .glyph:hover { transition: none; } }
       @media (max-width: 720px) { header { padding-top: 42px; padding-bottom: 42px; } .meta { display: none; } .atlas-copy h2 { font-size: clamp(28px, 10vw, 48px); } .atlas-fallback { width: min(72vw, 72vh); } .study { grid-template-columns: 1fr; } .orb-zone { min-height: 420px; border-right: 0; border-bottom: 1px solid rgba(247, 244, 232, .23); } .swatches { grid-template-columns: repeat(2, 1fr); } button { min-height: 118px; } .glyph-grid { grid-template-columns: repeat(4, 1fr); } .boundary-heading { grid-template-columns: 1fr; gap: 22px; } .boundary-stage { min-height: 420px; } .boundary-legend { right: 18px; bottom: 18px; gap: 12px; } .boundary-index { top: 18px; right: 18px; } }
     </style>
     <link rel="stylesheet" href="./components/atlas-loader-core/atlas-loader-core.css" />
@@ -139,41 +143,47 @@
         <div><p class="eyebrow">No Man’s Sky / Visual research 01</p><h1>ATLAS</h1></div>
         <p class="meta">CHROMATIC SIGNAL<br />INTERFACE STUDY<br />16 // 16 // 16</p>
       </header>
-      <section class="study" id="research" aria-label="Atlas 色彩研究">
-        <div class="orb-zone"><div class="orb" aria-hidden="true"></div><p class="orb-label">ATLAS INTERFACE<br />RED ENTITY / DARK ARCHITECTURE</p></div>
+      <section class="study" id="research" aria-label="Atlas chromatic study">
+        <div class="orb-zone">
+          <div class="orb-core" data-orb-core aria-label="Atlas Core: black and red low-poly sphere">
+            <canvas class="orb-core__canvas" data-orb-core-canvas aria-hidden="true"></canvas>
+            <div class="orb-core__fallback" aria-hidden="true"></div>
+          </div>
+          <p class="orb-label">ATLAS INTERFACE<br />RED ENTITY / DARK ARCHITECTURE</p>
+        </div>
         <div class="palette">
-          <h2>色彩提炼 / Chromatic extraction</h2>
-          <p>来自阿特拉斯界面的核心关系：近黑宇宙、冷灰结构、信号红主体、熔融橙红辉光，以及极少量冰蓝仪表光。点击色块可复制十六进制值。</p>
+          <h2>Chromatic extraction</h2>
+          <p>The Atlas interface is built around a near-black cosmos, cool-grey structures, a signal-red core, molten orange-red bloom, and sparse instrument-ice accents. Select a swatch to copy its hexadecimal value.</p>
           <div class="swatches">
             <button style="--swatch:#07080d" data-hex="#07080D"><span>Null Void</span></button>
             <button style="--swatch:#10141f" data-hex="#10141F"><span>Deep Space</span></button>
             <button style="--swatch:#1c2028" data-hex="#1C2028"><span>Obsidian Frame</span></button>
             <button style="--swatch:#59616c" data-hex="#59616C"><span>Atlas Alloy</span></button>
-            <button style="--swatch:#fa2a29" data-hex="#FA2A29"><span>Atlas Signal</span></button>
-            <button style="--swatch:#ff6351" data-hex="#FF6351"><span>Corona Red</span></button>
-            <button style="--swatch:#ff9a62" data-hex="#FF9A62"><span>Seed Ember</span></button>
-            <button style="--swatch:#f7f4e8" data-hex="#F7F4E8"><span>Star Glyph</span></button>
-            <button style="--swatch:#90d8e9" data-hex="#90D8E9"><span>Instrument Ice</span></button>
+            <button class="is-light" style="--swatch:#fa2a29" data-hex="#FA2A29"><span>Atlas Signal</span></button>
+            <button class="is-light" style="--swatch:#ff6351" data-hex="#FF6351"><span>Corona Red</span></button>
+            <button class="is-light" style="--swatch:#ff9a62" data-hex="#FF9A62"><span>Seed Ember</span></button>
+            <button class="is-light" style="--swatch:#f7f4e8" data-hex="#F7F4E8"><span>Star Glyph</span></button>
+            <button class="is-light" style="--swatch:#90d8e9" data-hex="#90D8E9"><span>Instrument Ice</span></button>
           </div>
-          <p class="note"><i class="dot"></i><span id="status">点击任一色块复制色值</span></p>
-          <h2 class="glyph-heading">传送门字形 / Portal glyph set</h2>
-          <div class="glyph-grid" aria-label="0 到 F 的传送门字形">
-            <div class="glyph"><img src="./glyphs/0.png" alt="字形 0" /><span>0</span></div>
-            <div class="glyph"><img src="./glyphs/1.png" alt="字形 1" /><span>1</span></div>
-            <div class="glyph"><img src="./glyphs/2.png" alt="字形 2" /><span>2</span></div>
-            <div class="glyph"><img src="./glyphs/3.png" alt="字形 3" /><span>3</span></div>
-            <div class="glyph"><img src="./glyphs/4.png" alt="字形 4" /><span>4</span></div>
-            <div class="glyph"><img src="./glyphs/5.png" alt="字形 5" /><span>5</span></div>
-            <div class="glyph"><img src="./glyphs/6.png" alt="字形 6" /><span>6</span></div>
-            <div class="glyph"><img src="./glyphs/7.png" alt="字形 7" /><span>7</span></div>
-            <div class="glyph"><img src="./glyphs/8.png" alt="字形 8" /><span>8</span></div>
-            <div class="glyph"><img src="./glyphs/9.png" alt="字形 9" /><span>9</span></div>
-            <div class="glyph"><img src="./glyphs/A.png" alt="字形 A" /><span>A</span></div>
-            <div class="glyph"><img src="./glyphs/B.png" alt="字形 B" /><span>B</span></div>
-            <div class="glyph"><img src="./glyphs/C.png" alt="字形 C" /><span>C</span></div>
-            <div class="glyph"><img src="./glyphs/D.png" alt="字形 D" /><span>D</span></div>
-            <div class="glyph"><img src="./glyphs/E.png" alt="字形 E" /><span>E</span></div>
-            <div class="glyph"><img src="./glyphs/F.png" alt="字形 F" /><span>F</span></div>
+          <p class="note"><i class="dot"></i><span id="status">Select any swatch to copy its value</span></p>
+          <h2 class="glyph-heading">Portal glyph set</h2>
+          <div class="glyph-grid" aria-label="Portal glyphs 0 through F">
+            <div class="glyph"><img src="./glyphs/0.png" alt="Portal glyph 0" /><span>0</span></div>
+            <div class="glyph"><img src="./glyphs/1.png" alt="Portal glyph 1" /><span>1</span></div>
+            <div class="glyph"><img src="./glyphs/2.png" alt="Portal glyph 2" /><span>2</span></div>
+            <div class="glyph"><img src="./glyphs/3.png" alt="Portal glyph 3" /><span>3</span></div>
+            <div class="glyph"><img src="./glyphs/4.png" alt="Portal glyph 4" /><span>4</span></div>
+            <div class="glyph"><img src="./glyphs/5.png" alt="Portal glyph 5" /><span>5</span></div>
+            <div class="glyph"><img src="./glyphs/6.png" alt="Portal glyph 6" /><span>6</span></div>
+            <div class="glyph"><img src="./glyphs/7.png" alt="Portal glyph 7" /><span>7</span></div>
+            <div class="glyph"><img src="./glyphs/8.png" alt="Portal glyph 8" /><span>8</span></div>
+            <div class="glyph"><img src="./glyphs/9.png" alt="Portal glyph 9" /><span>9</span></div>
+            <div class="glyph"><img src="./glyphs/A.png" alt="Portal glyph A" /><span>A</span></div>
+            <div class="glyph"><img src="./glyphs/B.png" alt="Portal glyph B" /><span>B</span></div>
+            <div class="glyph"><img src="./glyphs/C.png" alt="Portal glyph C" /><span>C</span></div>
+            <div class="glyph"><img src="./glyphs/D.png" alt="Portal glyph D" /><span>D</span></div>
+            <div class="glyph"><img src="./glyphs/E.png" alt="Portal glyph E" /><span>E</span></div>
+            <div class="glyph"><img src="./glyphs/F.png" alt="Portal glyph F" /><span>F</span></div>
           </div>
         </div>
       </section>
@@ -183,27 +193,40 @@
             <p class="eyebrow">Edge study / Signal 02</p>
             <h2 id="boundary-title">Luminous boundary</h2>
           </div>
-          <p>明亮的星白线定义路径，外侧依次叠加高饱和信号红与大范围低透明度辉光。直线与曲线使用完全相同的三层结构，展示这种能量边线在不同几何路径上的表现。</p>
+          <p>A star-white core defines each path, layered with saturated signal red and a broad low-opacity bloom. The linear and curved studies use the same three-tier construction to show how the energy edge behaves across different geometries.</p>
         </div>
-        <div class="boundary-stage" aria-label="直线和曲线的白色核心边线与渐弱红色外发光示例">
+        <div class="boundary-stage" aria-label="Straight and curved paths with white cores and fading red bloom">
           <svg class="boundary-art" viewBox="0 0 1160 620" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="boundary-svg-title boundary-svg-desc">
-            <title id="boundary-svg-title">直线与曲线的白色边线和红色渐弱辉光</title>
-            <desc id="boundary-svg-desc">上方是一条水平直线，下方是一条流动曲线；两者都叠加白色细线、红色核心光和向外渐弱的红色辉光。</desc>
+            <title id="boundary-svg-title">Straight and curved paths with white edges and red falloff</title>
+            <desc id="boundary-svg-desc">A horizontal line above and a flowing curve below, each layered with a fine white edge, a red core glow, and a wide fading red bloom.</desc>
             <defs>
               <path id="boundary-line" d="M120 215 H1040" />
               <path id="boundary-curve" d="M120 438 C300 320 458 530 640 424 S910 326 1040 414" />
+              <filter id="boundary-glow-wide" x="0" y="0" width="1160" height="620" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feGaussianBlur stdDeviation="22" />
+              </filter>
+              <filter id="boundary-glow-core" x="0" y="0" width="1160" height="620" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feGaussianBlur stdDeviation="8" />
+              </filter>
+              <filter id="boundary-white-edge" x="0" y="0" width="1160" height="620" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="white-glow" />
+                <feMerge>
+                  <feMergeNode in="white-glow" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
             <text class="spec-number" x="120" y="157">01</text>
             <text class="spec-label" x="153" y="157">Linear path</text>
-            <use class="glow-wide" href="#boundary-line" />
-            <use class="glow-core" href="#boundary-line" />
-            <use class="white-edge" href="#boundary-line" />
+            <use class="glow-wide" href="#boundary-line" filter="url(#boundary-glow-wide)" />
+            <use class="glow-core" href="#boundary-line" filter="url(#boundary-glow-core)" />
+            <use class="white-edge" href="#boundary-line" filter="url(#boundary-white-edge)" />
             <line class="divider" x1="120" y1="300" x2="1040" y2="300" />
             <text class="spec-number" x="120" y="354">02</text>
             <text class="spec-label" x="153" y="354">Curved path</text>
-            <use class="glow-wide" href="#boundary-curve" />
-            <use class="glow-core" href="#boundary-curve" />
-            <use class="white-edge" href="#boundary-curve" />
+            <use class="glow-wide" href="#boundary-curve" filter="url(#boundary-glow-wide)" />
+            <use class="glow-core" href="#boundary-curve" filter="url(#boundary-glow-core)" />
+            <use class="white-edge" href="#boundary-curve" filter="url(#boundary-white-edge)" />
           </svg>
           <div class="boundary-index" aria-hidden="true"><span>Boundary profile</span><strong>White / red / falloff</strong><span>Energy edge 02</span></div>
           <div class="boundary-legend" aria-hidden="true">
@@ -219,11 +242,11 @@
             <p class="eyebrow">Motion study / Signal 03</p>
             <h2 id="loader-title">Atlas loading signal</h2>
           </div>
-          <p>从正前方略高的位置观察上短下长的八面体，中间切面承载红色加载环；结构线进入核心光晕时逐渐隐去，白色波峰与外圈光点以不同速度反向扫描。</p>
+          <p>Viewed from slightly above, the elongated octahedron carries a red loading ring across its central plane. Structural lines fade as they enter the core bloom, while a white crest and outer signal points counter-rotate at different speeds.</p>
         </div>
         <div data-atlas-loader data-inner-orbit-radius="90" data-core-offset-y="40"></div>
       </section>
-      <footer>视觉依据：官方 <a href="https://www.nomanssky.com/omega-update/" target="_blank" rel="noreferrer">OMEGA 更新</a> 中阿特拉斯之路画面，以及历史 Atlas Interface 截图的综合色关系。</footer>
+      <footer>Visual references: Atlas Path imagery from the official <a href="https://www.nomanssky.com/omega-update/" target="_blank" rel="noreferrer">OMEGA Update</a>, combined with the color relationships found across historical Atlas Interface captures.</footer>
     </main>
     <script src="./vendor/three.min.js"></script>
     <script src="./components/atlas-core/atlas-core.js"></script>
@@ -404,6 +427,10 @@
         }
       };
       window.AtlasCore.mount();
+      window.AtlasCore.mount({
+        hero: document.querySelector('[data-orb-core]'),
+        canvas: document.querySelector('[data-orb-core-canvas]')
+      });
       window.AtlasLoader.mountAll();
 
 
@@ -423,7 +450,7 @@
             document.execCommand('copy');
             input.remove();
           }
-          document.querySelector('#status').textContent = `${hex} 已复制`;
+          document.querySelector('#status').textContent = `${hex} copied`;
         });
       });
     </script>

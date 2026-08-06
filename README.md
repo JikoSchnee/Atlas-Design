@@ -12,6 +12,12 @@ Atlas Design is a visual study and a collection of standalone web components ins
 
 ## Preview
 
+The color study is published at [jikoschnee.github.io/Atlas-Design](https://jikoschnee.github.io/Atlas-Design/).
+
+GitHub Pages deploys the static site automatically after every push to `main`.
+
+### Local preview
+
 Serve the repository with any static file server, then open `color-study.html`:
 
 ```sh
