@@ -1,0 +1,34 @@
+.atlas-loader-core__aura {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: atlas-loader-core-breathe 2.4s ease-in-out infinite;
+}
+
+.atlas-loader-core__ring {
+  fill: none;
+  stroke: rgba(255, 67, 58, .82);
+  stroke-width: 1.7;
+}
+
+.atlas-loader-core__ring.is-secondary {
+  stroke: rgba(255, 67, 58, .58);
+  stroke-width: 1.5;
+}
+
+.atlas-loader-core__bars {
+  filter: var(--atlas-loader-core-particle-filter);
+}
+
+.atlas-loader-core__bar {
+  stroke: #ff5a50;
+  stroke-width: 1.55;
+  stroke-linecap: butt;
+}
+
+@keyframes atlas-loader-core-breathe {
+  50% { opacity: .72; transform: scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-loader-core__aura { animation: none; }
+}

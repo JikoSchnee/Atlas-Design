@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Atlas Loader</title>
+    <link rel="stylesheet" href="../atlas-loader-core/atlas-loader-core.css" />
+    <link rel="stylesheet" href="./atlas-loader.css" />
+    <style>
+      :root { --signal: #fa2a29; --corona: #ff6351; --star: #f7f4e8; }
+      html, body { min-height: 100%; margin: 0; color: var(--star); background: #07080d; font-family: "Avenir Next", sans-serif; font-weight: 300; letter-spacing: .08em; }
+    </style>
+  </head>
+  <body>
+    <div data-atlas-loader data-inner-orbit-radius="90"></div>
+    <script src="../atlas-loader-core/atlas-loader-core.js"></script>
+    <script src="./atlas-loader.js"></script>
+    <script>window.AtlasLoader.mountAll();</script>
+  </body>
+</html>

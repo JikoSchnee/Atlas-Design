@@ -1,0 +1,9 @@
+:root { background: #040509; }
+html, body { width: 100%; min-height: 100%; margin: 0; background: #040509; }
+.atlas-core { position: relative; display: grid; min-height: 100svh; place-items: center; overflow: hidden; isolation: isolate; background: #040509; }
+.atlas-core__canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s ease; }
+.atlas-core.is-webgl .atlas-core__canvas { opacity: 1; }
+.atlas-core__fallback { position: absolute; width: min(46vw, 46vh); aspect-ratio: 1; border-radius: 48% 52% 55% 45% / 52% 43% 57% 48%; background: radial-gradient(circle at 34% 28%, #37404b, #0d0f14 38%, #030407 68%); box-shadow: inset -24px -20px 42px #000; }
+.atlas-core.is-webgl .atlas-core__fallback { opacity: 0; }
+@media (max-width: 720px) { .atlas-core__fallback { width: min(72vw, 72vh); } }
+@media (prefers-reduced-motion: reduce) { .atlas-core__canvas { display: none; } .atlas-core__fallback { opacity: 1 !important; } }

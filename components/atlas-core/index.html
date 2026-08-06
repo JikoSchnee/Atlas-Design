@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Atlas Core</title>
+    <link rel="stylesheet" href="./atlas-core.css" />
+  </head>
+  <body>
+    <section class="atlas-core" data-atlas-core aria-label="Atlas Core">
+      <canvas class="atlas-core__canvas" data-atlas-canvas aria-hidden="true"></canvas>
+      <div class="atlas-core__fallback" aria-hidden="true"></div>
+    </section>
+    <script src="../../vendor/three.min.js"></script>
+    <script src="./atlas-core.js"></script>
+    <script>window.AtlasCore.mount();</script>
+  </body>
+</html>

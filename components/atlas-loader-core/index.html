@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Atlas Loader Core</title>
+    <link rel="stylesheet" href="./atlas-loader-core.css" />
+    <style>
+      html, body { min-height: 100%; margin: 0; background: #10080a; }
+      body { display: grid; place-items: center; }
+      svg { width: min(72vw, 520px); overflow: visible; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="150 155 180 180" role="img" aria-label="Atlas 红色加载核心">
+      <g data-atlas-loader-core></g>
+    </svg>
+    <script src="./atlas-loader-core.js"></script>
+    <script>window.AtlasLoaderCore.mountAll();</script>
+  </body>
+</html>
