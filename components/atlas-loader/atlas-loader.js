@@ -42,13 +42,13 @@
 
     host.classList.add('atlas-loader-stage');
     host.dataset.atlasLoaderMounted = 'true';
-    if (!host.hasAttribute('aria-label')) host.setAttribute('aria-label', '无人深空风格的红色环形加载动效');
+    if (!host.hasAttribute('aria-label')) host.setAttribute('aria-label', 'Atlas-inspired red orbital loading animation');
     host.style.setProperty('--atlas-loader-core-y', `${coreOffsetY}px`);
     host.style.setProperty('--atlas-loader-vertex-filter', `url(#${vertexGlowId})`);
     host.innerHTML = `
       <svg class="atlas-loader" viewBox="0 0 480 600" role="img" aria-labelledby="${svgTitleId} ${svgDescriptionId}">
-          <title id="${svgTitleId}">Atlas 环形加载信号</title>
-          <desc id="${svgDescriptionId}">从正前方略高处观察一个上短下长的线框八面体，中间切面承载红色刻度加载环，靠近红色核心的结构线逐渐消失。</desc>
+          <title id="${svgTitleId}">Atlas orbital loading signal</title>
+          <desc id="${svgDescriptionId}">An elongated wireframe octahedron viewed from slightly above, with a red calibrated loading ring across its central plane and structural lines fading near the red core.</desc>
           <defs>
             <radialGradient id="${wireFadeId}" gradientUnits="userSpaceOnUse" cx="240" cy="245" r="150">
               <stop offset="0" stop-color="#000" />
