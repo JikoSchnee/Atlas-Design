@@ -107,6 +107,16 @@
   }
   customElements.define('a-waves', AWaves);
 
+  class DataStrip extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      const count = Math.max(1, Number.parseInt(this.dataset.segments || '4', 10));
+      this.replaceChildren(...Array.from({ length: count }, () => document.createElement('span')));
+      this.dataset.ready = 'true';
+    }
+  }
+  customElements.define('data-strip', DataStrip);
+
   const workItems = [
     ['Generous-Slider.DCY9Q-MO.mp4', 'https://generousbranding.com/'],
     ['Hf-Navigation.Gkvt7Etn.mp4', '#'],
@@ -226,7 +236,7 @@
       const titleObserver = new ResizeObserver(() => { fitHeroTitle(); remeasure(); });
       titleObserver.observe($('.hero-title'));
     }
-    if (document.fonts?.ready) document.fonts.ready.then(() => { fitHeroTitle(); remeasure(); });
+    if (document.fonts?.ready) document.fonts.ready.then(() => { fitHeroTitle(true); remeasure(); });
     const tick = time => {
       states.forEach(state => {
         if (!state.active && time >= state.nextAt) {
@@ -324,14 +334,6 @@
       const span = document.createElement('span'); span.textContent = letter; wall.append(span);
     });
 
-    const smiles = $('.smile-cloud');
-    for (let i = 0; i < 18; i += 1) {
-      const face = document.createElement('i');
-      face.style.setProperty('--s', `${28 + seeded(i) * 48}px`);
-      face.style.left = `${seeded(i + 31) * 92}%`; face.style.top = `${seeded(i + 61) * 93}%`;
-      face.style.transform = `rotate(${seeded(i + 91) * 50 - 25}deg)`;
-      face.innerHTML = '<b></b>'; smiles.append(face);
-    }
   }
 
   function buildWork() {
@@ -388,9 +390,12 @@
     return path;
   }
 
-  function fitHeroTitle() {
+  function fitHeroTitle(force = false) {
     const title = $('.hero-title');
     if (!title) return;
+    const fitKey = `${Math.round(title.clientWidth)}:${Math.round(title.clientHeight)}`;
+    if (!force && title.dataset.fitKey === fitKey) return;
+    title.dataset.fitKey = fitKey;
     title.style.fontSize = '';
     title.style.gap = '0px';
     const words = [...title.querySelectorAll('.hero-word')];
@@ -424,9 +429,7 @@
       Object.assign(webgl.camera, { left: -state.width / 2, right: state.width / 2, top: state.height / 2, bottom: -state.height / 2 });
       webgl.camera.updateProjectionMatrix();
     }
-    const about = $('.about'), contact = $('.contact');
-    $('.perspective-grid').setAttribute('viewBox', `0 0 ${about.clientWidth} ${about.clientHeight}`);
-    $('.perspective-grid path').setAttribute('d', gridPath(about.clientWidth, about.clientHeight, .43));
+    const contact = $('.contact');
     $('.contact-grid').setAttribute('viewBox', `0 0 ${contact.clientWidth} ${contact.clientHeight}`);
     $('.contact-grid path').setAttribute('d', gridPath(contact.clientWidth, contact.clientHeight, .28));
     updateScroll();
@@ -475,6 +478,112 @@
     if (webgl.renderer && reducedMotion) webgl.renderer.render(webgl.scene, webgl.camera);
   }
 
+  function updateAboutBlock() {
+    const section = $('.about');
+    const block = $('.about-content-block');
+    const upperStrip = $('.data-strip--bottom');
+    const lowerStrip = $('.about-strip');
+    const connectors = $('.about-connectors');
+    if (!section || !block || !upperStrip || !lowerStrip) return;
+    const gap = parseFloat(getComputedStyle(section).getPropertyValue('--about-block-gap')) || 64;
+    const upperHeight = upperStrip.offsetHeight;
+    const lowerHeight = lowerStrip.offsetHeight;
+    const border = section.clientTop || 0;
+    const sectionHeight = Math.max(
+      block.offsetHeight + gap * 2 + lowerHeight + border,
+      block.offsetHeight * 2 + gap * 4 + upperHeight + lowerHeight * 2 + border * 2 - state.height
+    );
+    if (Math.abs(section.offsetHeight - sectionHeight) > 0.5) section.style.height = `${sectionHeight}px`;
+    if (reducedMotion) {
+      block.style.transform = `translate3d(-50%,${gap}px,0)`;
+      updateAboutConnectors(section, block, connectors);
+      return;
+    }
+    const sectionRect = section.getBoundingClientRect();
+    const upperRect = upperStrip.getBoundingClientRect();
+    const lowerRect = lowerStrip.getBoundingClientRect();
+    const lowerTop = lowerRect.top - sectionRect.top;
+    const upperBottomDocument = state.scrollY + upperRect.bottom;
+    const lowerTopDocument = state.scrollY + lowerRect.top;
+    const middleDistance = Math.max(0, lowerTopDocument - upperBottomDocument);
+    const startScroll = state.scrollY + upperRect.top;
+    const endScroll = startScroll + middleDistance + upperRect.height + lowerRect.height - state.height;
+    const range = Math.max(endScroll - startScroll, 1);
+    const endOffset = Math.max(gap, lowerTop - block.offsetHeight - gap);
+    // Keep the same 0.5x motion through the anchors, then continue the
+    // slower drift so the frame can be collected by the lower strip.
+    const rawProgress = (state.scrollY - startScroll) / range;
+    const progress = clamp(rawProgress, -1, 1);
+    const parallaxSpeed = .5;
+    const afterAnchor = Math.max(0, state.scrollY - endScroll) * parallaxSpeed;
+    const offset = gap + (endOffset - gap) * progress + afterAnchor;
+    block.style.transform = `translate3d(-50%,${offset}px,0)`;
+    updateAboutConnectors(section, block, connectors);
+  }
+
+  function updateAboutConnectors(section, block, connectors) {
+    if (!connectors) return;
+    const sectionRect = section.getBoundingClientRect();
+    const blockRect = block.getBoundingClientRect();
+    const left = blockRect.left - sectionRect.left;
+    const right = blockRect.right - sectionRect.left;
+    const top = blockRect.top - sectionRect.top;
+    const bottom = blockRect.bottom - sectionRect.top;
+    const width = section.clientWidth;
+    const lowerStrip = $('.about-strip', section);
+    const lowerRect = lowerStrip ? lowerStrip.getBoundingClientRect() : sectionRect;
+    const lowerLeft = lowerRect.left - sectionRect.left;
+    const lowerRight = lowerRect.right - sectionRect.left;
+    const lowerTop = lowerRect.top - sectionRect.top;
+    $('.about-outer', connectors).setAttribute('d', `M0 0H${width}V${lowerTop}H0Z`);
+    const grid = [];
+    // Keep the top and bottom perspective fans intentionally sparse: four
+    // converging lines per edge (including both outer boundaries).
+    const columns = 3;
+    const rows = 10;
+    for (let index = 0; index <= columns; index += 1) {
+      const ratio = index / columns;
+      const outerX = ratio * width;
+      const innerX = left + ratio * (right - left);
+      grid.push(`M${outerX} 0L${innerX} ${top}`);
+      grid.push(`M${outerX} ${lowerTop}L${innerX} ${bottom}`);
+    }
+    for (let index = 1; index < rows; index += 1) {
+      const ratio = index / rows;
+      const outerY = ratio * lowerTop;
+      const innerY = top + ratio * (bottom - top);
+      grid.push(`M0 ${outerY}L${left} ${innerY}`);
+      grid.push(`M${width} ${outerY}L${right} ${innerY}`);
+    }
+    const crossRows = 4;
+    for (let index = 1; index < crossRows; index += 1) {
+      const ratio = index / crossRows;
+      const topY = ratio * top;
+      const topLeft = ratio * left;
+      const topRight = width - ratio * (width - right);
+      grid.push(`M${topLeft} ${topY}L${topRight} ${topY}`);
+      const bottomY = lowerTop + ratio * (bottom - lowerTop);
+      const bottomLeft = ratio * left;
+      const bottomRight = width - ratio * (width - right);
+      grid.push(`M${bottomLeft} ${bottomY}L${bottomRight} ${bottomY}`);
+    }
+    const sideRows = 4;
+    for (let index = 1; index < sideRows; index += 1) {
+      const ratio = index / sideRows;
+      const sideYTop = ratio * top;
+      const sideYBottom = lowerTop + ratio * (bottom - lowerTop);
+      const leftX = ratio * left;
+      const rightX = width - ratio * (width - right);
+      grid.push(`M${leftX} ${sideYTop}L${leftX} ${sideYBottom}`);
+      grid.push(`M${rightX} ${sideYTop}L${rightX} ${sideYBottom}`);
+    }
+    $('.about-grid', connectors).setAttribute('d', grid.join(''));
+    $('.about-link--tl', connectors).setAttribute('d', `M0 0L${left} ${top}`);
+    $('.about-link--tr', connectors).setAttribute('d', `M${width} 0L${right} ${top}`);
+    $('.about-link--bl', connectors).setAttribute('d', `M${lowerLeft} ${lowerTop}L${left} ${bottom}`);
+    $('.about-link--br', connectors).setAttribute('d', `M${lowerRight} ${lowerTop}L${right} ${bottom}`);
+  }
+
   function updateMemories() {
     const section = $('.my-way'); const rect = section.getBoundingClientRect();
     const progress = clamp((state.height - rect.top) / (state.height + section.offsetHeight));
@@ -492,7 +601,7 @@
   }
 
   function updateScroll() {
-    state.scrollY = scrollY; updateWork(); updateMemories(); state.ticking = false;
+    state.scrollY = scrollY; updateAboutBlock(); updateWork(); updateMemories(); state.ticking = false;
   }
 
   function bind() {
