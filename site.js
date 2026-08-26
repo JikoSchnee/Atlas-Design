@@ -89,7 +89,8 @@
         const noiseY = p.y * .004;
         const warp = noise.perlin2(noiseX * .55 + 19.7 + flow * .55, noiseY * .8 - 7.1 - flow * .32);
         const detail = noise.perlin2(noiseX * 1.7 - 31.4 - flow * .36, noiseY * 1.9 + 12.8 + flow * .28);
-        const move = noise.perlin2(noiseX + warp * .72 + flow, noiseY + detail * .42 - flow * .38) * 9 + detail * 3;
+        const phase = noise.perlin2(noiseX * .37 + 63.2 + flow * .2, noiseY * .61 - 27.4 - flow * .15);
+        const move = noise.perlin2(noiseX + warp * .72 + flow, noiseY + detail * .42 - flow * .38) * 9 + detail * 3 + phase * 1.4;
         p.wave.x = Math.cos(move) * 32; p.wave.y = Math.sin(move) * 16;
         const dx = p.x - mouse.sx, dy = p.y - mouse.sy, d = Math.hypot(dx, dy), l = Math.max(175, mouse.vs);
         if (d < l) { const s = 1 - d / l, f = Math.cos(d * .001) * s; p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * .00065; p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * .00065; }
