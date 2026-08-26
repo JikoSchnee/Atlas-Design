@@ -537,9 +537,9 @@
     const lowerTop = lowerRect.top - sectionRect.top;
     $('.about-outer', connectors).setAttribute('d', `M0 0H${width}V${lowerTop}H0Z`);
     const grid = [];
-    // Keep the top and bottom perspective fans intentionally sparse: four
+    // Keep the top and bottom perspective fans intentionally sparse: five
     // converging lines per edge (including both outer boundaries).
-    const columns = 3;
+    const columns = 4;
     const rows = 10;
     for (let index = 0; index <= columns; index += 1) {
       const ratio = index / columns;
