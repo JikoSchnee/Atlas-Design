@@ -168,6 +168,80 @@
     return x - Math.floor(x);
   }
 
+  function initHeroLetterMotion() {
+    const tracks = [...document.querySelectorAll('.hero-letter-track')];
+    if (!tracks.length) return;
+    tracks.forEach(track => {
+      const cell = track.closest('.hero-letter-cell');
+      if (/^[OSC]$/.test(cell?.querySelector('.hero-letter-sizer')?.textContent || '')) cell.classList.add('hero-letter-cell--round');
+    });
+    if (reducedMotion) return;
+    let seed = 0x51f15e;
+    const random = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 4294967296;
+    };
+    const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    const states = tracks.map(element => {
+      const instances = [...element.querySelectorAll('.hero-letter')];
+      return { element, cell: element.closest('.hero-letter-cell'), sizer: element.parentElement.querySelector('.hero-letter-sizer'), primary: instances[0], secondary: instances[1], nextAt: 0, startedAt: 0, distance: 0, direction: [0, 0], active: false };
+    });
+    const firstDelay = () => 1000 + random() * 14000;
+    const nextDelay = () => 6000 + random() * 9000;
+    const measureDistance = state => {
+      state.cell.style.width = '';
+      const width = state.sizer.offsetWidth;
+      const height = state.cell.offsetHeight;
+      const gap = parseFloat(getComputedStyle(state.cell).getPropertyValue('--letter-gap')) || 5;
+      state.cell.style.width = `${width}px`;
+      state.cell.style.setProperty('--letter-width', `${width}px`);
+      state.cell.style.setProperty('--letter-height', `${height}px`);
+      state.distance = (state.direction[0] ? width : height) + gap;
+    };
+    const easeInOut = value => value < .5 ? 2 * value * value : 1 - Math.pow(-2 * value + 2, 2) / 2;
+    const translate = (dx, dy, distance) => `${dx * distance}px ${dy * distance}px`;
+    const parkSecondary = state => {
+      const [dx, dy] = state.direction;
+      state.element.style.translate = '';
+      state.primary.style.translate = '';
+      state.secondary.style.translate = translate(-dx, -dy, state.distance);
+    };
+    const applyMotion = (state, progress) => {
+      const [dx, dy] = state.direction;
+      state.element.style.translate = translate(dx, dy, state.distance * easeInOut(progress));
+    };
+    const settle = state => {
+      const outgoing = state.primary;
+      state.primary = state.secondary;
+      state.secondary = outgoing;
+      parkSecondary(state);
+    };
+    const remeasure = () => states.forEach(state => {
+      measureDistance(state);
+      if (!state.active) parkSecondary(state);
+    });
+    states.forEach(state => { state.direction = directions[0]; measureDistance(state); parkSecondary(state); state.nextAt = performance.now() + firstDelay(); });
+    addEventListener('resize', remeasure, { passive: true });
+    if (window.ResizeObserver) {
+      const titleObserver = new ResizeObserver(() => { fitHeroTitle(); remeasure(); });
+      titleObserver.observe($('.hero-title'));
+    }
+    if (document.fonts?.ready) document.fonts.ready.then(() => { fitHeroTitle(); remeasure(); });
+    const tick = time => {
+      states.forEach(state => {
+        if (!state.active && time >= state.nextAt) {
+          state.active = true; state.startedAt = time; state.direction = directions[Math.floor(random() * directions.length)]; measureDistance(state); parkSecondary(state);
+        }
+        if (!state.active) return;
+        const progress = Math.min(1, (time - state.startedAt) / 1000);
+        applyMotion(state, progress);
+        if (progress >= 1) { state.active = false; settle(state); state.nextAt = time + nextDelay(); }
+      });
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
   function buildData() {
     const statuses = [
       'PLEASE WAIT WHILE I OVERTHINK THIS',
@@ -177,6 +251,73 @@
     ];
     let status = 0;
     if (!reducedMotion) setInterval(() => { status = (status + 1) % statuses.length; $('#loader-line').textContent = statuses[status]; }, 2500);
+
+    const binaryRows = [...document.querySelectorAll('.data-strip')].map(row => ({
+      segments: [...row.querySelectorAll('span')].map(span => ({ span, bits: [], separatorCount: 0 }))
+    }));
+    let binarySeed = 0x2e25da7a;
+    const nextBinaryRandom = () => {
+      binarySeed = (binarySeed * 1664525 + 1013904223) >>> 0;
+      return binarySeed / 4294967296;
+    };
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const getCharacterWidth = span => {
+      const styles = getComputedStyle(span);
+      if (context) {
+        context.font = `${styles.fontStyle} ${styles.fontVariant} ${styles.fontWeight} ${styles.fontSize} ${styles.fontFamily}`;
+        const measured = context.measureText('0').width;
+        if (measured > 0) return measured;
+      }
+      return parseFloat(styles.fontSize) * .6 || 4;
+    };
+    const renderSegment = segment => {
+      const separator = '/'.repeat(segment.separatorCount);
+      const split = Math.ceil(segment.bits.length / 2);
+      const first = segment.bits.slice(0, split).join('');
+      const second = segment.bits.slice(split).join('');
+      segment.span.dataset.binary = `${first}   ${separator}   ${second}   ${separator}`;
+    };
+    const resizeBinaryRows = () => {
+      binaryRows.forEach(row => row.segments.forEach(segment => {
+        const width = segment.span.getBoundingClientRect().width;
+        const characterWidth = getCharacterWidth(segment.span);
+        const capacity = Math.max(1, Math.floor(width / characterWidth));
+        const separatorCount = Math.max(1, Math.min(7, Math.floor(capacity * .12)));
+        const bitCount = Math.max(1, capacity - separatorCount * 2 - 9);
+        while (segment.bits.length < bitCount) segment.bits.push(nextBinaryRandom() < .5 ? '0' : '1');
+        segment.bits.length = bitCount;
+        segment.separatorCount = separatorCount;
+        renderSegment(segment);
+      }));
+    };
+    resizeBinaryRows();
+    addEventListener('resize', resizeBinaryRows, { passive: true });
+    if (document.fonts?.ready) document.fonts.ready.then(resizeBinaryRows);
+    const updateBinary = () => {
+      binaryRows.forEach(row => {
+        const totalBits = row.segments.reduce((total, segment) => total + segment.bits.length, 0);
+        const bitCount = Math.min(totalBits, 10);
+        const positions = new Set();
+        const dirtySegments = new Set();
+        while (positions.size < bitCount) positions.add(Math.floor(nextBinaryRandom() * totalBits));
+        positions.forEach(position => {
+          let remaining = position;
+          let segmentIndex = 0;
+          while (segmentIndex < row.segments.length - 1 && remaining >= row.segments[segmentIndex].bits.length) {
+            remaining -= row.segments[segmentIndex].bits.length;
+            segmentIndex += 1;
+          }
+          const bitIndex = remaining;
+          const segment = row.segments[segmentIndex];
+          segment.bits[bitIndex] = segment.bits[bitIndex] === '0' ? '1' : '0';
+          dirtySegments.add(segmentIndex);
+        });
+        dirtySegments.forEach(segmentIndex => renderSegment(row.segments[segmentIndex]));
+      });
+    };
+    updateBinary();
+    if (!reducedMotion) setInterval(updateBinary, 100);
 
     const wall = $('.work-wall');
     'WORK'.repeat(11).split('').forEach(letter => {
@@ -247,8 +388,37 @@
     return path;
   }
 
+  function fitHeroTitle() {
+    const title = $('.hero-title');
+    if (!title) return;
+    title.style.fontSize = '';
+    title.style.gap = '0px';
+    const words = [...title.querySelectorAll('.hero-word')];
+    const star = title.querySelector('.hero-star');
+    if (words.length !== 2 || !star) return;
+    star.style.transform = '';
+    const baseSize = parseFloat(getComputedStyle(title).fontSize);
+    const wordScaleX = 1.26;
+    const wordWidth = words.reduce((sum, word) => sum + word.offsetWidth * wordScaleX, 0);
+    const referenceLetters = [...words[0].querySelectorAll('.hero-letter-cell')].slice(0, 2);
+    const twoLetterWidth = referenceLetters.reduce((sum, letter) => sum + letter.offsetWidth * wordScaleX, 0);
+    const starWidth = star.offsetWidth;
+    const styles = getComputedStyle(title);
+    const padding = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+    const available = Math.max(1, title.clientWidth - padding - starWidth);
+    const scale = Math.min(1, available / Math.max(wordWidth + twoLetterWidth * 2, 1));
+    title.style.fontSize = `${Math.max(1, baseSize * scale)}px`;
+    title.style.gap = `${twoLetterWidth * scale}px`;
+    const firstEnd = words[0].offsetLeft + words[0].offsetWidth;
+    const secondStart = words[1].offsetLeft;
+    const targetCenter = (firstEnd + secondStart) / 2;
+    const starCenter = star.offsetLeft + star.offsetWidth / 2;
+    star.style.transform = `translateX(${targetCenter - starCenter}px)`;
+  }
+
   function resize() {
     state.width = innerWidth; state.height = innerHeight;
+    fitHeroTitle();
     if (webgl.renderer) {
       webgl.renderer.setSize(state.width, state.height, false);
       Object.assign(webgl.camera, { left: -state.width / 2, right: state.width / 2, top: state.height / 2, bottom: -state.height / 2 });
@@ -328,7 +498,17 @@
   function bind() {
     addEventListener('pointermove', event => { state.pointerX = event.clientX / innerWidth; state.pointerY = event.clientY / innerHeight; }, { passive: true });
     addEventListener('scroll', () => { if (!state.ticking) { state.ticking = true; requestAnimationFrame(updateScroll); } }, { passive: true });
-    addEventListener('resize', resize, { passive: true });
+    let resizeFrame = 0;
+    const scheduleResize = () => {
+      if (resizeFrame) return;
+      resizeFrame = requestAnimationFrame(() => { resizeFrame = 0; resize(); });
+    };
+    addEventListener('resize', scheduleResize, { passive: true });
+    window.visualViewport?.addEventListener('resize', scheduleResize, { passive: true });
+    if (window.ResizeObserver) {
+      const shellObserver = new ResizeObserver(scheduleResize);
+      shellObserver.observe($('.site-shell'));
+    }
     $('.contrast').addEventListener('click', event => {
       document.body.classList.toggle('is-contrast');
       const pressed = document.body.classList.contains('is-contrast'); event.currentTarget.setAttribute('aria-pressed', String(pressed));
@@ -336,5 +516,5 @@
     });
   }
 
-  buildData(); buildWork(); initWorkWebGL(); buildMemories(); bind(); resize();
+  buildData(); buildWork(); initWorkWebGL(); buildMemories(); bind(); resize(); initHeroLetterMotion();
 })();
