@@ -4,6 +4,8 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const state = { width: innerWidth, height: innerHeight, pointerX: .5, pointerY: .5, scrollY: 0, ticking: false };
   const webgl = { renderer: null, scene: null, camera: null, meshes: [] };
+  const paperPalette = ['#e1cab8', '#f40c3f', '#fff2ed'];
+  let paperThemeIndex = 0;
 
   class Noise {
     constructor(seed = 0.314159) {
@@ -600,6 +602,15 @@
     $('.my-way-smiley').style.transform = `translate(-50%,-50%) rotate(${progress * 280}deg) scale(${.7 + progress * .6})`;
   }
 
+  function applyPaperTheme(index) {
+    paperThemeIndex = ((index % paperPalette.length) + paperPalette.length) % paperPalette.length;
+    const color = paperPalette[paperThemeIndex];
+    document.body.style.setProperty('--paper', color);
+    document.body.dataset.paperTheme = String(paperThemeIndex);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = color;
+  }
+
   function updateScroll() {
     state.scrollY = scrollY; updateAboutBlock(); updateWork(); updateMemories(); state.ticking = false;
   }
@@ -618,11 +629,9 @@
       const shellObserver = new ResizeObserver(scheduleResize);
       shellObserver.observe($('.site-shell'));
     }
-    $('.contrast').addEventListener('click', event => {
-      document.body.classList.toggle('is-contrast');
-      const pressed = document.body.classList.contains('is-contrast'); event.currentTarget.setAttribute('aria-pressed', String(pressed));
-      document.querySelector('meta[name="theme-color"]').content = pressed ? '#fff2ed' : '#f40c3f';
-    });
+    const contrast = $('.contrast');
+    applyPaperTheme(0);
+    contrast.addEventListener('click', () => applyPaperTheme(paperThemeIndex + 1));
   }
 
   buildData(); buildWork(); initWorkWebGL(); buildMemories(); bind(); resize(); initHeroLetterMotion();
