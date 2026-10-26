@@ -21,6 +21,7 @@ Screenshot of the chromatic study, including the Atlas sphere, color palette, an
 - `components/atlas-core` — WebGL Atlas sphere.
 - `components/atlas-loader-core` — radial loading core.
 - `components/atlas-loader` — composed loading visualization.
+- `glyphs/svg` — 16 clean vector outlines extracted from the supplied NMS-Glyphs-Mono.ttf. The page embeds these paths with a soft white SVG glow; downloadable SVGs remain unfiltered.
 - `DESIGN.md` — design language and implementation notes.
 
 ## Local preview

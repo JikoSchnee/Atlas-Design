@@ -129,7 +129,7 @@
       .glyph-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px; border: 1px solid rgba(247, 244, 232, .23); background: rgba(247, 244, 232, .23); }
       .glyph { display: grid; min-height: 82px; place-items: center; position: relative; border: 1.5px solid transparent; background: var(--void-blue); box-shadow: 0 0 0 0 rgba(255, 24, 37, 0), 0 0 0 0 rgba(255, 24, 37, 0), 0 0 0 0 rgba(255, 24, 37, 0); transition: background .2s ease, transform .2s ease, border-color .16s ease, box-shadow .2s ease; }
       .glyph:hover { z-index: 1; border-color: #fffdf4; background: #1e1720; box-shadow: 0 0 3px 1px rgba(255, 24, 37, .92), 0 0 9px 3px rgba(255, 24, 37, .52), 0 0 18px 6px rgba(255, 24, 37, .17); transform: scale(1.06); transition: background .2s ease, transform .2s ease, border-color .16s ease, box-shadow .36s ease .18s; }
-      .glyph img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(250, 42, 41, .28)); }
+      .glyph svg { width: 40px; height: 40px; display: block; overflow: visible; color: #fff; }
       .glyph span { position: absolute; right: 6px; bottom: 5px; color: var(--metal); font-size: 8px; }
       .boundary-study, .loader-study { max-width: 1320px; margin: auto; padding: clamp(68px, 10vw, 132px) clamp(24px, 5vw, 80px); border-top: 1px solid rgba(247, 244, 232, .23); }
       .boundary-heading { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(300px, 1.3fr); gap: clamp(32px, 7vw, 110px); align-items: end; margin-bottom: clamp(34px, 5vw, 64px); }
@@ -222,22 +222,230 @@
           <p class="note"><i class="dot"></i><span id="status">Select any swatch to copy its value</span></p>
           <h2 class="glyph-heading">Portal glyph set</h2>
           <div class="glyph-grid" aria-label="Portal glyphs 0 through F">
-            <div class="glyph"><img src="./glyphs/0.png" alt="Portal glyph 0" /><span>0</span></div>
-            <div class="glyph"><img src="./glyphs/1.png" alt="Portal glyph 1" /><span>1</span></div>
-            <div class="glyph"><img src="./glyphs/2.png" alt="Portal glyph 2" /><span>2</span></div>
-            <div class="glyph"><img src="./glyphs/3.png" alt="Portal glyph 3" /><span>3</span></div>
-            <div class="glyph"><img src="./glyphs/4.png" alt="Portal glyph 4" /><span>4</span></div>
-            <div class="glyph"><img src="./glyphs/5.png" alt="Portal glyph 5" /><span>5</span></div>
-            <div class="glyph"><img src="./glyphs/6.png" alt="Portal glyph 6" /><span>6</span></div>
-            <div class="glyph"><img src="./glyphs/7.png" alt="Portal glyph 7" /><span>7</span></div>
-            <div class="glyph"><img src="./glyphs/8.png" alt="Portal glyph 8" /><span>8</span></div>
-            <div class="glyph"><img src="./glyphs/9.png" alt="Portal glyph 9" /><span>9</span></div>
-            <div class="glyph"><img src="./glyphs/A.png" alt="Portal glyph A" /><span>A</span></div>
-            <div class="glyph"><img src="./glyphs/B.png" alt="Portal glyph B" /><span>B</span></div>
-            <div class="glyph"><img src="./glyphs/C.png" alt="Portal glyph C" /><span>C</span></div>
-            <div class="glyph"><img src="./glyphs/D.png" alt="Portal glyph D" /><span>D</span></div>
-            <div class="glyph"><img src="./glyphs/E.png" alt="Portal glyph E" /><span>E</span></div>
-            <div class="glyph"><img src="./glyphs/F.png" alt="Portal glyph F" /><span>F</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-0">
+  <title id="glyph-title-0">Portal glyph 0: Sunset</title>
+  <defs>
+    <filter id="portal-glow-0" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-0" filter="url(#portal-glow-0)">
+    <path d="M324 153 320 154Q286 181 265 188L261 193L257 211L265 218Q283 213 298 205L329 184L348 198Q383 221 416 222Q449 222 487 199L508 184L528 198Q563 221 597 222Q631 222 668 200L690 184L714 201Q726 209 741 214L749 207L745 188L742 183Q725 175 699 154L695 153H685L681 154Q632 194 597 193Q563 192 518 154L514 153H503L499 154Q450 194 417 193Q383 192 338 154L334 153ZM324 218 320 220Q280 253 253 257L248 261L244 279L251 286Q276 283 311 262L329 250L348 263Q383 286 416 287Q450 287 487 265L508 250L528 263Q563 286 597 287Q631 287 668 265L690 250L721 271Q736 279 755 284L763 277L759 257L754 258L755 254Q727 244 699 220L695 218H685L681 220Q633 260 597 258Q562 257 518 220L514 218H503L499 220Q451 259 417 258Q381 256 338 220L334 218ZM324 282 320 283Q275 321 241 321L235 326L232 343L238 350Q273 350 308 328L329 313L348 327Q383 350 416 351Q449 351 487 328L508 313L528 327Q563 350 597 351Q630 351 668 328L690 313L707 326Q739 347 769 350L776 343L772 324L767 325V321Q739 317 699 283L695 282H685L681 283Q632 323 597 322Q563 321 518 283L514 282H503L499 283Q450 323 417 322Q383 321 338 283L334 282ZM140 344Q104 374 78 381Q65 384 68.0 398.0Q71 412 86 408Q105 402 117 395L149 374L166 386Q192 403 206 407L223 411L242 455Q281 531 353.0 571.5Q425 612 501.0 612.5Q577 613 650.0 573.0Q723 533 764 457L783 413L802 410Q824 406 849 390L871 376L904 397Q923 408 937 410Q950 413 954 399Q957 386 943 382Q917 377 879 346Q870 339 861 346Q813 386 778 384Q744 383 699 346Q690 339 681 346Q633 386 597 384Q562 383 518 346Q508 338 499 346Q451 385 417.0 384.0Q383 383 338 346Q329 339 320 346Q272 386 237 384Q206 383 158 344Q149 337 140 344ZM329 375 348 389Q383 412 416 413Q450 413 487 391L508 375L528 389Q563 412 597 413Q631 413 668 391L690 376L705 387Q729 402 742 406L754 409L737 445Q707 499 658.5 533.5Q610 568 555.5 577.5Q501 587 447.0 577.5Q393 568 346.0 533.5Q299 499 270 446L254 411L267 409Q285 404 310 389Z" />
+  </g>
+</svg><span>0</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-1">
+  <title id="glyph-title-1">Portal glyph 1: Bird</title>
+  <defs>
+    <filter id="portal-glow-1" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-1" filter="url(#portal-glow-1)">
+    <path d="M840 314Q847 274 777 231Q807 238 817 233Q739 189 537 172Q486 164 458.0 154.5Q430 145 422.5 136.5Q415 128 417 116Q389 124 403 145Q412 159 440 173L252 193Q175 282 144 225Q120 240 127 272Q137 319 211 335Q263 347 339 339Q380 363 427 434Q457 499 589 548L880 655Q874 637 863 625L586 521Q514 494 477 452L854 579Q847 564 836 549L561 453Q542 447 528.5 442.0Q515 437 503.0 432.0Q491 427 484.0 424.5Q477 422 470.0 417.0Q463 412 460.0 410.5Q457 409 452.0 403.0Q447 397 446.0 396.0Q445 395 440.0 387.0Q435 379 434 377L820 501Q816 484 798 467L424 346Q415 333 411 313L642 381Q648 381 646 378Q643 371 612 346L427 291Q438 268 521 245Q587 226 640.5 224.5Q694 223 731.5 236.5Q769 250 793.5 268.5Q818 287 840 314ZM168 284Q241 258 263 219Q488 189 600 203Q556 206 509.5 218.5Q463 231 435.0 242.5Q407 254 355 278Q320 294 286.5 302.0Q253 310 220.0 306.5Q187 303 168 284Z" />
+  </g>
+</svg><span>1</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-2">
+  <title id="glyph-title-2">Portal glyph 2: Face</title>
+  <defs>
+    <filter id="portal-glow-2" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-2" filter="url(#portal-glow-2)">
+    <path d="M430 121V206H240Q230 206 226.5 215.5Q223 225 231 231Q306 292 430 312V597H231Q217 597 217.0 611.0Q217 625 231 625H443Q457 625 457 611V560H565V611Q565 625 579 625H791Q805 625 805.0 611.0Q805 597 791 597H593V312Q716 292 791 231Q799 225 795.5 215.5Q792 206 782 206H593V121Q593 107 579.0 107.0Q565 107 565 121V288Q540 291 512.0 291.0Q484 291 457 288V121Q457 107 443 107Q430 107 430 121ZM430 234V284Q348 269 288 235L285 234ZM737 234 735 236Q677 269 593 284V234ZM565 316V469H457V316Q484 319 512.0 319.0Q540 319 565 316ZM327.0 461.5Q316 456 304.0 460.0Q292 464 286.5 475.5Q281 487 285.0 499.0Q289 511 300.0 516.0Q311 521 323.0 517.0Q335 513 340.5 502.0Q346 491 342.0 479.0Q338 467 327.0 461.5ZM723.0 461.5Q712 456 700.0 460.0Q688 464 682.5 475.5Q677 487 681.0 499.0Q685 511 696.0 516.0Q707 521 719.0 517.0Q731 513 736.5 502.0Q742 491 738.0 479.0Q734 467 723.0 461.5ZM565 497V532H457V497Z" />
+  </g>
+</svg><span>2</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-3">
+  <title id="glyph-title-3">Portal glyph 3: Diplo</title>
+  <defs>
+    <filter id="portal-glow-3" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-3" filter="url(#portal-glow-3)">
+    <path d="M194 550Q173 572 170.0 603.5Q167 635 186 664Q204 714 252.0 729.0Q300 744 343.0 702.5Q386 661 389 568Q392 447 410.0 379.0Q428 311 478 282Q546 242 590.0 200.5Q634 159 675 103Q715 48 771 53Q817 57 833 97Q856 158 781 236Q775 242 769 248Q832 231 855 168Q877 108 847 62Q810 5 721 31Q683 43 638 71Q636 58 624 26Q614 21 595 25Q605 47 614 87Q589 100 569 115Q556 62 540 26Q523 22 512 27Q530 62 548 130Q526 145 504 174Q478 82 455 26Q437 22 426 29Q454 82 482 200Q464 214 445 244Q398 95 367 26Q348 22 340 30Q378 120 424 274Q396 301 382.0 377.5Q368 454 361 589Q358 652 324.5 682.0Q291 712 255.0 698.5Q219 685 208 640Q207 591 194 550Z" />
+  </g>
+</svg><span>3</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-4">
+  <title id="glyph-title-4">Portal glyph 4: Eclipse</title>
+  <defs>
+    <filter id="portal-glow-4" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-4" filter="url(#portal-glow-4)">
+    <path d="M487 61Q353 71 265.0 173.0Q177 275 187.0 409.0Q197 543 299.0 631.5Q401 720 535 710Q569 707 600 698Q623 693 631 685Q633 682 628 681Q526 658 462.5 583.0Q399 508 391 407H808Q800 518 724 594Q739 602 750 606Q847 503 836 361Q829 256 760 176Q751 179 733 187Q801 261 808 363Q808 366 808.5 371.5Q809 377 809 380H390Q392 280 462.5 194.5Q533 109 631 90Q637 89 622 80Q621 79 620 79Q613 76 603 73Q602 72 600 72H599Q544 57 487 61ZM363 409Q370 499 421.0 571.0Q472 643 551 680Q539 682 533 682Q410 691 316.5 610.5Q223 530 214 407H363Z" />
+  </g>
+</svg><span>4</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-5">
+  <title id="glyph-title-5">Portal glyph 5: Balloon</title>
+  <defs>
+    <filter id="portal-glow-5" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-5" filter="url(#portal-glow-5)">
+    <path d="M494 60 326 506Q321 520 319 531Q319 531 319 547Q320 615 372.0 669.5Q424 724 511 726Q598 724 650.0 669.5Q702 615 703 547V531Q701 520 696 506L529 61Q522 39 511 39Q501 39 494 60ZM489 176H493V686L490 688L461 682Q412 667 384.0 628.5Q356 590 355 547V536Q355 533 360 519ZM534 176 662 519 668 536Q668 536 668 547Q667 589 638.5 628.0Q610 667 561 682L532 688L529 686V176Z" />
+  </g>
+</svg><span>5</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-6">
+  <title id="glyph-title-6">Portal glyph 6: Boat</title>
+  <defs>
+    <filter id="portal-glow-6" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-6" filter="url(#portal-glow-6)">
+    <path d="M163 146H191Q136 178 144 264H344V604Q332 609 327.0 622.0Q322 635 327 647Q332 660 344.5 665.0Q357 670 370.0 665.0Q383 660 388.0 647.5Q393 635 388 622Q384 610 371 605V264H534V466Q534 479 548.0 479.0Q562 479 562 466V264H652V354Q652 368 666.0 368.0Q680 368 680 354V264H879Q881 175 831 146H854Q867 146 867.0 133.0Q867 120 854 120H163Q150 120 150.0 133.0Q150 146 163 146ZM847 225Q847 241 830 239H194Q176 241 176 225Q176 191 204.0 170.5Q232 150 277 146H746Q791 150 819.0 170.5Q847 191 847 225Z" />
+  </g>
+</svg><span>6</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-7">
+  <title id="glyph-title-7">Portal glyph 7: Bug</title>
+  <defs>
+    <filter id="portal-glow-7" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-7" filter="url(#portal-glow-7)">
+    <path d="M312 69Q286 101 280.0 142.5Q274 184 287.0 221.5Q300 259 337.0 287.0Q374 315 427 320L453 321L454 375L266 374Q253 375 250 382L248 396L252 410Q256 416 266 416H455L456 466H429Q375 471 338.0 499.5Q301 528 288.0 565.5Q275 603 281.0 644.5Q287 686 313 718Q323 730 334 720Q346 710 336 699Q315 674 310.5 640.0Q306 606 316.5 575.5Q327 545 358.0 522.5Q389 500 434 496L456 495L457 515Q457 524 464.5 529.5Q472 535 480.0 531.5Q488 528 489 515L488 267L495 255Q506 237 512 237Q516 237 529 255L537 267L536 515Q537 529 545.0 533.0Q553 537 560.5 531.0Q568 525 568 515L569 495L591 496Q636 500 666.5 523.0Q697 546 707.5 576.5Q718 607 713.5 640.5Q709 674 688 699Q678 710 690 720Q701 730 711 718Q737 686 742.5 644.5Q748 603 735.0 565.5Q722 528 685.0 499.5Q648 471 595 466H569L570 416H757Q766 416 770 410L774 396L772 382Q767 375 756 374L571 375V321L597 320Q650 315 687.0 286.5Q724 258 736.5 220.5Q749 183 743.0 142.0Q737 101 712 69Q702 57 691 67Q679 77 689 88Q710 113 715.0 146.5Q720 180 709.5 210.5Q699 241 669.0 264.0Q639 287 594 291H572L573 226Q574 209 560.5 201.5Q547 194 511 194Q478 194 464.5 201.5Q451 209 452 226L453 291H431Q386 287 356.0 264.0Q326 241 315.5 210.5Q305 180 309.5 146.5Q314 113 335 88Q345 77 333 67Q322 57 312 69Z" />
+  </g>
+</svg><span>7</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-8">
+  <title id="glyph-title-8">Portal glyph 8: Dragonfly</title>
+  <defs>
+    <filter id="portal-glow-8" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-8" filter="url(#portal-glow-8)">
+    <path d="M510 170Q465 231 464 291V361Q463 366 459.5 369.0Q456 372 451.5 373.0Q447 374 441.5 373.5Q436 373 431.0 370.5Q426 368 422.0 365.0Q418 362 416.0 357.5Q414 353 414 349Q415 345 412.5 343.5Q410 342 404 341Q320 338 259.5 339.5Q199 341 162.5 359.5Q126 378 119 418Q138 425 191 425H464V445H191Q138 445 119 452Q126 492 162.5 510.5Q199 529 259.5 530.5Q320 532 404 529Q407 529 408.5 528.5Q410 528 411.5 527.0Q413 526 413.5 524.5Q414 523 414 521Q413 505 436.0 498.0Q459 491 464 508V560L459 562Q351 593 351 709V731Q351 744 365.0 744.0Q379 744 379 731V709Q379 607 480 585Q491 583 491 571L492 291Q493 256 500.5 237.0Q508 218 527 192Q572 146 584.5 80.0Q597 14 575 -13Q574 -10 570.5 26.5Q567 63 553.5 101.5Q540 140 510 170ZM530 313 531 571Q531 583 542 585Q643 607 643 709V731Q643 744 657.0 744.0Q671 744 671 731V709Q671 593 563 562L558 560V509Q562 491 585.5 498.0Q609 505 608 521Q607 525 609.5 526.5Q612 528 618 529Q702 532 762.5 530.5Q823 529 859.5 510.5Q896 492 903 452Q884 445 831 445H558V425H831Q884 425 903 418Q896 378 859.5 359.5Q823 341 762.5 339.5Q702 338 618 341Q615 341 613.5 341.5Q612 342 610.5 343.0Q609 344 608.5 345.5Q608 347 608 349Q608 360 597.0 368.0Q586 376 573.0 374.5Q560 373 558 360V291Q556 260 548 237Q533 255 530 313ZM382 365Q355 379 344 399Q218 397 161 397Q181 373 223.0 368.0Q265 363 382 365ZM861 397Q804 397 678 399Q667 379 640 365Q757 363 799.0 368.0Q841 373 861 397ZM382 505Q265 507 223.0 502.0Q181 497 161 473Q218 473 344 471Q355 491 382 505ZM861 473Q841 497 799.0 502.0Q757 507 640 505Q667 491 678 471Q804 473 861 473Z" />
+  </g>
+</svg><span>8</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-9">
+  <title id="glyph-title-9">Portal glyph 9: Galaxy</title>
+  <defs>
+    <filter id="portal-glow-9" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-9" filter="url(#portal-glow-9)">
+    <path d="M570 51Q626 65 661.0 109.0Q696 153 698 209Q700 274 665.0 334.0Q630 394 563 418Q597 377 594.0 326.5Q591 276 566.5 230.0Q542 184 498.5 148.0Q455 112 406 101Q351 88 292.5 115.0Q234 142 218 198Q252 150 305.5 132.5Q359 115 411 134Q471 155 514.0 207.5Q557 260 558 329Q522 270 450.0 260.5Q378 251 308.5 285.5Q239 320 205 380Q187 411 183.5 450.5Q180 490 195.0 528.5Q210 567 242 588Q206 542 205.0 485.5Q204 429 237 384Q277 330 343.0 304.5Q409 279 478 304Q407 322 378.5 390.5Q350 459 367.5 537.0Q385 615 436 663Q477 702 539.0 707.5Q601 713 647 674Q593 698 538.5 686.5Q484 675 448 632Q405 582 395.5 516.5Q386 451 423 382Q423 432 456.0 472.5Q489 513 537.5 531.5Q586 550 642.0 553.0Q698 556 744 532Q795 508 824.0 449.5Q853 391 830 338Q834 397 803.5 443.5Q773 490 720 509Q680 521 639.5 522.5Q599 524 556.0 506.0Q513 488 483 452Q547 474 608.5 436.5Q670 399 703.0 329.5Q736 260 727 193Q720 137 674.0 91.5Q628 46 570 51ZM546 369Q550 388 539.5 405.0Q529 422 509 427Q490 431 473.0 420.5Q456 410 451 390Q447 371 457.5 354.0Q468 337 488 332Q507 328 524.0 338.5Q541 349 546 369Z" />
+  </g>
+</svg><span>9</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-A">
+  <title id="glyph-title-A">Portal glyph A: Voxel</title>
+  <defs>
+    <filter id="portal-glow-A" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-A" filter="url(#portal-glow-A)">
+    <path d="M511 100 257 247V540L511 686L765 540V247ZM524 144 717 256 524 368ZM494 147V368L303 257ZM733 281V506L539 393ZM289 284 479 393 289 503ZM494 419V640L303 530ZM524 419 717 531 524 642ZM438.5 507.0Q425 504 414.0 512.0Q403 520 400.5 533.0Q398 546 405.0 557.0Q412 568 425.5 571.0Q439 574 450.0 566.0Q461 558 463.5 545.0Q466 532 459.0 521.0Q452 510 438.5 507.0Z" />
+  </g>
+</svg><span>A</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-B">
+  <title id="glyph-title-B">Portal glyph B: Fish</title>
+  <defs>
+    <filter id="portal-glow-B" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-B" filter="url(#portal-glow-B)">
+    <path d="M561 322Q486 275 362 283Q401 260 448 254Q504 251 544 227Q554 217 540 209Q437 153 344 257Q331 280 298 294Q282 297 262.5 302.5Q243 308 229.5 313.0Q216 318 193.5 328.5Q171 339 163.0 343.0Q155 347 130.5 359.5Q106 372 104 373Q103 404 136.5 425.5Q170 447 259.5 459.0Q349 471 507 455Q526 453 532.0 454.0Q538 455 555 463Q592 478 617 490Q638 503 639 480Q639 468 635 447Q702 446 828 525Q824 469 820 441Q814 435 791 421Q889 425 929 394Q795 411 685 373Q644 354 595 339Q607 328 618.0 319.5Q629 311 640.0 305.0Q651 299 659.0 294.0Q667 289 679.0 286.0Q691 283 696.5 281.0Q702 279 714.0 277.5Q726 276 729.5 276.0Q733 276 747.0 275.0Q761 274 763 274Q739 265 717.5 263.0Q696 261 655.0 275.0Q614 289 561 322ZM241 372Q250 371 251.5 379.5Q253 388 247 394Q239 402 249 401Q264 401 268 387Q271 380 268 371Q470 385 571 364Q618 374 676 401Q733 420 775 439Q787 446 794.0 455.0Q801 464 802.0 468.0Q803 472 805 483Q802 481 786.0 472.0Q770 463 764.5 460.5Q759 458 744.5 450.5Q730 443 720.5 440.0Q711 437 696.5 432.0Q682 427 667.0 424.0Q652 421 635 419Q619 418 615.5 425.0Q612 432 617 442Q619 462 616 462Q615 462 613 460Q555 427 516 430Q425 443 342.5 439.5Q260 436 202.5 422.5Q145 409 143 392Q146 375 241 372ZM220 345Q302 308 396.0 307.5Q490 307 536 338Q522 348 415.5 348.5Q309 349 220 345Z" />
+  </g>
+</svg><span>B</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-C">
+  <title id="glyph-title-C">Portal glyph C: Tent</title>
+  <defs>
+    <filter id="portal-glow-C" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-C" filter="url(#portal-glow-C)">
+    <path d="M456 215V32H228Q211 44 228 54L271 56Q284 231 414 300L496 519L445 657L446 754L470 755L469 665L511 552L554 665L552 755L576 754L577 657L527 519L608 300Q738 231 751 56L795 54Q812 44 795 32H567V215Z" />
+  </g>
+</svg><span>C</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-D">
+  <title id="glyph-title-D">Portal glyph D: Rocket</title>
+  <defs>
+    <filter id="portal-glow-D" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-D" filter="url(#portal-glow-D)">
+    <path d="M409 -8V13L418 40L422 105L405 142Q360 151 321 148Q283 145 245 123Q237 121 232.5 125.5Q228 130 228 140Q232 174 237.5 192.0Q243 210 260.0 230.5Q277 251 312.0 264.0Q347 277 405 288Q423 290 425 315L437 606Q449 732 499 788Q506 795 511.0 795.0Q516 795 523 788Q573 732 585 606L597 315Q599 290 617 288Q675 277 710.0 264.0Q745 251 762.0 230.5Q779 210 784.5 192.0Q790 174 794 140Q794 130 789.5 125.5Q785 121 777 123Q739 145 701 148Q662 151 617 142L600 105L605 40L613 13V-8ZM492 22V188H530V22H578L576 31Q574 35 574 38L570 103Q570 113 572 118L589 154Q595 168 610 171Q660 182 704 178Q728 176 747 170L760 165L756 182Q752 198 740 210Q712 240 612 258Q592 261 580.0 277.5Q568 294 566 314L554 603L550 639Q540 710 517 746L511 754L505 746Q482 710 472 639L468 603L456 314Q454 294 442.0 277.5Q430 261 410 258Q310 240 282 210Q270 198 266 182L262 165L276 170Q295 176 318 178Q362 182 412 171Q427 168 433 154L450 118Q452 113 452 103L448 38Q448 33 447 31L444 22Z" />
+  </g>
+</svg><span>D</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-E">
+  <title id="glyph-title-E">Portal glyph E: Tree</title>
+  <defs>
+    <filter id="portal-glow-E" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-E" filter="url(#portal-glow-E)">
+    <path d="M443 45 440 49V322L194 619L193 624Q201 642 219 645L223 643L474 341Q478 337 478 329V49L475 45Q459 41 443 45ZM547 45 544 49V329Q544 336 548 341L799 643L803 645Q819 642 829 624V619L583 322V49L579 45Q563 41 547 45ZM496 389 360 551Q350 563 359 575L458 703L463 704Q479 696 488 685V680L399 564L511 430L623 564L534 680V684Q543 704 561 705L565 703L663 575Q672 562 663 551L526 388Q509 376 496 389ZM336 584 331 585 251 680V686Q264 700 275 706L281 705L360 610L361 605Q355 592 336 584ZM662 604V610L742 705L747 706Q760 699 771 686V680L691 585L686 584Q674 590 662 604Z" />
+  </g>
+</svg><span>E</span></div>
+            <div class="glyph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="glyph-title-F">
+  <title id="glyph-title-F">Portal glyph F: Atlas</title>
+  <defs>
+    <filter id="portal-glow-F" filterUnits="userSpaceOnUse" x="-512" y="-512" width="2048" height="2048" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="64" result="outer-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="26" result="inner-white" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="soft-core" />
+      <feMerge><feMergeNode in="outer-white" /><feMergeNode in="inner-white" /><feMergeNode in="inner-white" /><feMergeNode in="soft-core" /></feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(0 903) scale(1 -1)" fill="currentColor" data-glow-filter="portal-glow-F" filter="url(#portal-glow-F)">
+    <path d="M511 634 442 515H580ZM390 484 512 695 633 484ZM216 123H354L285 242ZM407 93H163L285 303ZM807 123 738 242 669 123ZM737 303 859 92 616 93ZM511 92 338 393 685 394ZM511 153 634 366H388Z" />
+  </g>
+</svg><span>F</span></div>
           </div>
         </div>
       </section>
