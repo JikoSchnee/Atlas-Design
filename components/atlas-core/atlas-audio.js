@@ -10,6 +10,7 @@ window.AtlasAudio = {
     const unlockEvents = new AbortController();
     let context, gain, analyser, mediaSource, bins, waveform;
     let destroyed = false, pending = null, previousTime = null, sampledAt = null;
+    let bassEnvelope = 0;
     let lastVolume = Number(volume.value) || .7;
     const signal = { innerBass: 0, outerBass: 0, innerEnergy: 0, outerEnergy: 0 };
     audio.volume = Number(volume.value);
@@ -44,7 +45,7 @@ window.AtlasAudio = {
       analyser = context.createAnalyser();
       analyser.fftSize = 2048;
       analyser.smoothingTimeConstant = 0;
-      bins = new Uint8Array(analyser.frequencyBinCount);
+      bins = new Float32Array(analyser.frequencyBinCount);
       waveform = new Float32Array(analyser.fftSize);
       mediaSource = context.createMediaElementSource(audio);
       mediaSource.connect(gain);
@@ -94,16 +95,21 @@ window.AtlasAudio = {
       previousTime = time;
       let bass = 0, energy = 0;
       if (!destroyed && analyser && context.state === 'running' && !audio.paused && !audio.muted && Number(volume.value) > 0) {
-        analyser.getByteFrequencyData(bins);
+        analyser.getFloatFrequencyData(bins);
         analyser.getFloatTimeDomainData(waveform);
         const binHz = context.sampleRate / analyser.fftSize;
         const first = Math.max(1, Math.ceil(30 / binHz));
         const last = Math.min(bins.length - 1, Math.floor(180 / binHz));
-        for (let i = first; i <= last; i++) bass += bins[i] / 255;
-        bass = Math.min(1, bass / Math.max(1, last - first + 1));
+        // Convert FFT decibels back to linear power; byte FFT values saturate
+        // on this dense soundtrack and hide its transient rhythm.
+        for (let i = first; i <= last; i++) bass += Math.pow(10, bins[i] / 10);
+        bass = Math.min(1, Math.sqrt(bass / Math.max(1, last - first + 1)) * 12);
+        bassEnvelope += (bass - bassEnvelope) * (1 - Math.exp(-dt / 1.2));
+        bass = Math.min(1, bass * .45 + Math.max(0, bass - bassEnvelope) * 3);
         for (const value of waveform) energy += value * value;
         energy = Math.min(1, Math.sqrt(energy / waveform.length) * 4);
       }
+      if (audio.paused || audio.muted || Number(volume.value) === 0) bassEnvelope = 0;
       const smooth = (key, target, attack, release) => {
         const tau = target > signal[key] ? attack : release;
         signal[key] += (target - signal[key]) * (1 - Math.exp(-dt / tau));
