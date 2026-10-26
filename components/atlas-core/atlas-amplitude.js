@@ -7,15 +7,15 @@ window.AtlasAmplitude = {
     let inner = .02, outer = .035, pointer = null;
     const clamp = (x, max) => Math.max(0, Math.min(max, x));
     const update = () => {
-      stick.style.left = `${inner / .12 * 100}%`;
-      stick.style.top = `${(1 - outer / .21) * 100}%`;
+      stick.style.left = `${inner * 100}%`;
+      stick.style.top = `${(1 - outer) * 100}%`;
       output.textContent = `Inner ${(inner * 100).toFixed(1)}% · Outer ${(outer * 100).toFixed(1)}%`;
       cores.forEach(core => core?.setAmplitude({ inner, outer }));
     };
     const move = event => {
       const rect = pad.getBoundingClientRect();
-      inner = clamp((event.clientX - rect.left) / rect.width * .12, .12);
-      outer = clamp((1 - (event.clientY - rect.top) / rect.height) * .21, .21);
+      inner = clamp((event.clientX - rect.left) / rect.width, 1);
+      outer = clamp((1 - (event.clientY - rect.top) / rect.height), 1);
       update();
     };
     pad.addEventListener('pointerdown', event => {
@@ -39,10 +39,10 @@ window.AtlasAmplitude = {
       event.preventDefault();
       if (event.key === 'Home') { reset(); return; }
       const step = event.shiftKey ? .01 : .005;
-      if (event.key === 'ArrowLeft') inner = clamp(inner - step, .12);
-      if (event.key === 'ArrowRight') inner = clamp(inner + step, .12);
-      if (event.key === 'ArrowUp') outer = clamp(outer + step, .21);
-      if (event.key === 'ArrowDown') outer = clamp(outer - step, .21);
+      if (event.key === 'ArrowLeft') inner = clamp(inner - step, 1);
+      if (event.key === 'ArrowRight') inner = clamp(inner + step, 1);
+      if (event.key === 'ArrowUp') outer = clamp(outer + step, 1);
+      if (event.key === 'ArrowDown') outer = clamp(outer - step, 1);
       update();
     });
     update();

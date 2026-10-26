@@ -59,8 +59,8 @@ window.AtlasCore = {
       syncMotion();
       return {
         setAmplitude({ inner = amplitude.inner, outer = amplitude.outer } = {}) {
-          amplitude.inner = Math.max(0, Math.min(.12, Number(inner) || 0));
-          amplitude.outer = Math.max(0, Math.min(.21, Number(outer) || 0));
+          amplitude.inner = Math.max(0, Math.min(1, Number(inner) || 0));
+          amplitude.outer = Math.max(0, Math.min(1, Number(outer) || 0));
         },
         destroy() {
           if (destroyed) return;
