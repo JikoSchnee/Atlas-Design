@@ -22,7 +22,7 @@ window.AtlasCore = {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height, false);
       };
-      const amplitude = { inner: .02, outer: .035 };
+      const amplitude = { inner: .08, outer: .10 };
       const bounded = value => Math.max(0, Math.min(1, Number(value) || 0));
       const render = time => {
         frame = 0;

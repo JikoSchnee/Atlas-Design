@@ -75,6 +75,7 @@
       .audio-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
       .amplitude-tuner { position: absolute; z-index: 4; bottom: 20px; right: clamp(16px, 3vw, 40px); width: 176px; padding: 12px; border: 1px solid #59616c; background: rgba(4,5,9,.88); color: var(--star); font-size: 10px; }
+      .amplitude-tuner[hidden] { display: none; }
       .amplitude-tuner p { margin: 0 0 8px; line-height: 1.5; }
       .amplitude-pad { position: relative; width: 104px; height: 104px; margin: 8px auto; border: 1px solid #59616c; background: linear-gradient(transparent 49.5%, #59616c 50%, transparent 50.5%), linear-gradient(90deg, transparent 49.5%, #59616c 50%, transparent 50.5%); touch-action: none; cursor: grab; }
       .amplitude-pad:focus-visible { outline: 2px solid var(--ice); outline-offset: 4px; }
@@ -175,7 +176,7 @@
           <input data-audio-volume type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Music volume" title="Music volume" />
           <span class="audio-status" data-audio-status role="status">Loading music.</span>
         </div>
-        <aside class="amplitude-tuner" data-amplitude-tuner aria-label="Temporary maximum amplitude tuner">
+        <aside class="amplitude-tuner" hidden data-amplitude-tuner aria-label="Temporary maximum amplitude tuner">
           <p>AMPLITUDE / TEMP<br />X: inner · Y: outer ↑</p>
           <div class="amplitude-pad" tabindex="0" role="group" aria-label="Drag to set inner and outer amplitude. Arrow keys adjust; Home resets." aria-describedby="amplitude-values">
             <span class="amplitude-stick"></span>

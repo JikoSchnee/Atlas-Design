@@ -4,7 +4,7 @@ window.AtlasAmplitude = {
     const pad = root.querySelector('.amplitude-pad');
     const stick = root.querySelector('.amplitude-stick');
     const output = root.querySelector('output');
-    let inner = .02, outer = .035, pointer = null;
+    let inner = .08, outer = .10, pointer = null;
     const clamp = (x, max) => Math.max(0, Math.min(max, x));
     const update = () => {
       stick.style.left = `${inner * 100}%`;
@@ -32,7 +32,7 @@ window.AtlasAmplitude = {
       if (pad.hasPointerCapture(pointer)) pad.releasePointerCapture(pointer);
       pointer = null;
     });
-    const reset = () => { inner = .02; outer = .035; update(); };
+    const reset = () => { inner = .08; outer = .10; update(); };
     root.querySelector('[data-amplitude-reset]').addEventListener('click', reset);
     pad.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home'].includes(event.key)) return;
