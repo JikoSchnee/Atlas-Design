@@ -74,6 +74,14 @@
       .atlas-audio input[type="range"]:focus-visible { outline: 1px solid var(--ice); outline-offset: 4px; }
       .audio-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
+      .amplitude-tuner { position: absolute; z-index: 4; bottom: 20px; right: clamp(16px, 3vw, 40px); width: 176px; padding: 12px; border: 1px solid #59616c; background: rgba(4,5,9,.88); color: var(--star); font-size: 10px; }
+      .amplitude-tuner p { margin: 0 0 8px; line-height: 1.5; }
+      .amplitude-pad { position: relative; width: 104px; height: 104px; margin: 8px auto; border: 1px solid #59616c; background: linear-gradient(transparent 49.5%, #59616c 50%, transparent 50.5%), linear-gradient(90deg, transparent 49.5%, #59616c 50%, transparent 50.5%); touch-action: none; cursor: grab; }
+      .amplitude-pad:focus-visible { outline: 2px solid var(--ice); outline-offset: 4px; }
+      .amplitude-stick { position: absolute; width: 22px; height: 22px; border: 1px solid var(--star); border-radius: 50%; background: var(--signal); transform: translate(-50%, -50%); pointer-events: none; }
+      .amplitude-tuner output { display: block; line-height: 1.7; font-variant-numeric: tabular-nums; }
+      .amplitude-tuner button { min-height: 28px; padding: 4px 8px; margin-top: 6px; color: var(--star); background: transparent; border: 1px solid #59616c; font: inherit; cursor: pointer; transform: none; }
+      .amplitude-tuner button::after { content: none; }
       .atlas-github { position: absolute; z-index: 3; top: clamp(16px, 3vw, 40px); right: clamp(16px, 3vw, 40px); display: grid; place-items: center; width: 44px; height: 44px; color: var(--star); }
       .atlas-github svg { width: 24px; height: 24px; fill: currentColor; }
       .atlas-github:hover { color: var(--corona); }
@@ -167,6 +175,14 @@
           <input data-audio-volume type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Music volume" title="Music volume" />
           <span class="audio-status" data-audio-status role="status">Loading music.</span>
         </div>
+        <aside class="amplitude-tuner" data-amplitude-tuner aria-label="Temporary maximum amplitude tuner">
+          <p>AMPLITUDE / TEMP<br />X: inner · Y: outer ↑</p>
+          <div class="amplitude-pad" tabindex="0" role="group" aria-label="Drag to set inner and outer amplitude. Arrow keys adjust; Home resets." aria-describedby="amplitude-values">
+            <span class="amplitude-stick"></span>
+          </div>
+          <output id="amplitude-values" aria-live="polite"></output>
+          <button type="button" data-amplitude-reset>Reset</button>
+        </aside>
         <div class="atlas-telemetry" aria-hidden="true"><span>ATLAS // CORE</span><strong>16 // 16 // 16</strong><span>SIMULATION: ACTIVE</span></div>
         <div class="atlas-copy"><p class="eyebrow">The creator // Atlas interface</p><h2>ATLAS</h2></div>
         <a class="hero-scroll" href="#research">Scroll to signal</a>
@@ -283,6 +299,7 @@
     <script src="./vendor/three.min.js"></script>
     <script src="./components/atlas-core/atlas-core.js"></script>
     <script src="./components/atlas-core/atlas-audio.js"></script>
+    <script src="./components/atlas-core/atlas-amplitude.js"></script>
     <script src="./components/atlas-loader-core/atlas-loader-core.js"></script>
     <script src="./components/atlas-loader/atlas-loader.js"></script>
     <script>
@@ -295,6 +312,7 @@
           readAudio: audioReactive.read
         })
       ];
+      window.AtlasAmplitude.mount(document.querySelector('[data-amplitude-tuner]'), atlasCores);
       addEventListener('pagehide', event => {
         audioReactive.pause();
         if (!event.persisted) {

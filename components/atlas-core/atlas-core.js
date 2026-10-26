@@ -22,14 +22,16 @@ window.AtlasCore = {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height, false);
       };
+      const amplitude = { inner: .02, outer: .035 };
       const bounded = value => Math.max(0, Math.min(1, Number(value) || 0));
       const render = time => {
         frame = 0;
         if (destroyed || document.hidden || motion.matches) return;
         const t = time * .001;
         const signal = readAudio(time) || {};
-        a.scale.setScalar(1.84 * (1 + bounded(signal.innerBass) * .02));
-        const shellScale = 1 + bounded(signal.outerBass) * .035;
+        const shellScale = 1 + bounded(signal.outerBass) * amplitude.outer;
+        // Keep the fast inner pulse inside the slower shell even at debug limits.
+        a.scale.setScalar(Math.min(1.84 * (1 + bounded(signal.innerBass) * amplitude.inner), 1.9 * shellScale - .023));
         b.scale.setScalar(1.9 * shellScale);
         redContour.scale.setScalar(1.945 * shellScale);
         whiteContour.scale.setScalar(1.918 * shellScale);
@@ -56,6 +58,10 @@ window.AtlasCore = {
       resize();
       syncMotion();
       return {
+        setAmplitude({ inner = amplitude.inner, outer = amplitude.outer } = {}) {
+          amplitude.inner = Math.max(0, Math.min(.12, Number(inner) || 0));
+          amplitude.outer = Math.max(0, Math.min(.21, Number(outer) || 0));
+        },
         destroy() {
           if (destroyed) return;
           destroyed = true;
