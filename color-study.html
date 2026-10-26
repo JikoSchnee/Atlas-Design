@@ -61,6 +61,21 @@
       .atlas-hero { isolation: isolate; position: relative; display: grid; min-height: 100svh; place-items: center; overflow: hidden; background: #040509; }
       #atlas-canvas { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s ease; }
       .atlas-hero.is-webgl #atlas-canvas { opacity: 1; }
+      .atlas-audio { position: absolute; z-index: 3; right: clamp(16px, 3vw, 40px); bottom: 24px; left: clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 12px 20px; flex-wrap: wrap; padding: 14px 18px; border: 1px solid rgba(247,244,232,.23); background: rgba(4,5,9,.88); color: var(--star); font-size: 11px; }
+      .atlas-audio .audio-button { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; min-height: 40px; padding: 10px 14px; overflow: visible; border: 1px solid rgba(247,244,232,.4); color: var(--star); background: transparent; font: inherit; text-align: center; cursor: pointer; transform: none; }
+      .atlas-audio .audio-button::after { content: none; }
+      .atlas-audio .audio-button:hover { border-color: var(--corona); outline: none; }
+      .atlas-audio .audio-button:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
+      .atlas-audio .audio-button:disabled { opacity: .4; cursor: default; }
+      .audio-file { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+      .audio-file:focus-visible + label { outline: 2px solid var(--ice); outline-offset: 3px; }
+      .audio-track { flex: 1 1 160px; min-width: 0; display: grid; gap: 5px; }
+      .audio-track strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 300; }
+      .audio-status { color: #bdc4cb; font-size: 10px; line-height: 1.5; }
+      .audio-volume { display: flex; align-items: center; gap: 10px; }
+      .audio-volume input { width: 100px; accent-color: var(--corona); }
+      @media (max-width: 540px) { .atlas-audio { gap: 8px 12px; padding: 10px 12px; bottom: 16px; } .audio-track { flex-basis: calc(100% - 180px); } .audio-volume { margin-left: auto; } }
+
       .atlas-github { position: absolute; z-index: 3; top: clamp(16px, 3vw, 40px); right: clamp(16px, 3vw, 40px); display: grid; place-items: center; width: 44px; height: 44px; color: var(--star); }
       .atlas-github svg { width: 24px; height: 24px; fill: currentColor; }
       .atlas-github:hover { color: var(--corona); }
@@ -142,6 +157,16 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297C5.37.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.043-1.61-4.043-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.305.762-1.605-2.665-.303-5.467-1.334-5.467-5.93 0-1.31.469-2.38 1.236-3.22-.124-.303-.536-1.524.118-3.176 0 0 1.008-.322 3.301 1.23A11.52 11.52 0 0112 6.101c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.656 1.652.244 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.597 24 12.297c0-6.627-5.373-12-12-12" /></svg>
         </a>
         <div class="atlas-fallback" aria-hidden="true"></div>
+        <section class="atlas-audio" data-atlas-audio aria-label="Audio reactive controls">
+          <input class="audio-file" id="atlas-audio-file" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac" />
+          <label class="audio-button" for="atlas-audio-file">Choose music</label>
+          <button class="audio-button" type="button" data-audio-play disabled>Play</button>
+          <div class="audio-track">
+            <strong data-audio-track>No track selected</strong>
+            <span class="audio-status" data-audio-status role="status">Local playback only. Your music stays on this device.</span>
+          </div>
+          <label class="audio-volume">Volume <input data-audio-volume type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Audio volume" /></label>
+        </section>
         <div class="atlas-telemetry" aria-hidden="true"><span>ATLAS // CORE</span><strong>16 // 16 // 16</strong><span>SIMULATION: ACTIVE</span></div>
         <div class="atlas-copy"><p class="eyebrow">The creator // Atlas interface</p><h2>ATLAS</h2></div>
         <a class="hero-scroll" href="#research">Scroll to signal</a>
@@ -257,186 +282,25 @@
     </main>
     <script src="./vendor/three.min.js"></script>
     <script src="./components/atlas-core/atlas-core.js"></script>
+    <script src="./components/atlas-core/atlas-audio.js"></script>
     <script src="./components/atlas-loader-core/atlas-loader-core.js"></script>
     <script src="./components/atlas-loader/atlas-loader.js"></script>
     <script>
-      if (!window.AtlasCore) window.AtlasCore = {
-        mount({ hero = document.querySelector('.atlas-hero'), canvas = document.querySelector('#atlas-canvas') } = {}) {
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-        if (!hero || !canvas || !window.THREE || reducedMotion.matches) return;
-
-        try {
-          const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-          renderer.outputColorSpace = THREE.SRGBColorSpace;
-          renderer.toneMapping = THREE.ACESFilmicToneMapping;
-          renderer.toneMappingExposure = 1.25;
-
-          const scene = new THREE.Scene();
-          const camera = new THREE.PerspectiveCamera(34, 1, .1, 100);
-          camera.position.set(0, .12, 6.7);
-          const coreGroup = new THREE.Group();
-          scene.add(coreGroup);
-          const fixedLightDirection = new THREE.Vector3(.28, .52, .81).normalize();
-
-          const layerVertex = `
-            varying vec3 vObjectPosition;
-            varying vec3 vWorldPosition;
-            varying vec3 vViewDirection;
-            void main() {
-              vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-              vObjectPosition = position;
-              vWorldPosition = worldPosition.xyz;
-              vViewDirection = normalize(cameraPosition - worldPosition.xyz);
-              gl_Position = projectionMatrix * viewMatrix * worldPosition;
-            }
-          `;
-          const innerFragment = `
-            uniform float uTime;
-            uniform vec3 uLightDirection;
-            varying vec3 vObjectPosition;
-            varying vec3 vWorldPosition;
-            varying vec3 vViewDirection;
-            float hash(vec3 p) { return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453123); }
-            float noise(vec3 p) {
-              vec3 i = floor(p);
-              vec3 f = fract(p);
-              f = f * f * (3.0 - 2.0 * f);
-              return mix(mix(mix(hash(i), hash(i + vec3(1.0,0.0,0.0)), f.x), mix(hash(i + vec3(0.0,1.0,0.0)), hash(i + vec3(1.0,1.0,0.0)), f.x), f.y), mix(mix(hash(i + vec3(0.0,0.0,1.0)), hash(i + vec3(1.0,0.0,1.0)), f.x), mix(hash(i + vec3(0.0,1.0,1.0)), hash(i + vec3(1.0,1.0,1.0)), f.x), f.y), f.z);
-            }
-            float fbm(vec3 p) {
-              float value = 0.0;
-              float amplitude = .52;
-              for (int i = 0; i < 5; i++) { value += noise(p) * amplitude; p = p * 2.03 + 7.1; amplitude *= .5; }
-              return value;
-            }
-            void main() {
-              vec3 normalFace = normalize(cross(dFdx(vWorldPosition), dFdy(vWorldPosition)));
-              if (dot(normalFace, vViewDirection) < 0.0) normalFace *= -1.0;
-              vec3 p = normalize(vObjectPosition) * 5.3;
-              float textureA = fbm(p);
-              float textureB = fbm(p * 2.4);
-              float pulse = sin(uTime * .16 + textureB * 6.28318) * .025;
-              float energy = smoothstep(.43, .82, textureA + textureB * .3 + pulse);
-              float lightAmount = max(0.0, dot(normalFace, uLightDirection));
-              float redRegion = smoothstep(.46, .92, lightAmount);
-              float lightFalloff = pow(redRegion, 2.6);
-              float focalIntensity = pow(lightAmount, 3.0);
-              float redMask = lightFalloff * (.38 + energy * .62);
-              float rim = pow(1.0 - max(0.0, dot(normalFace, normalize(vViewDirection))), 2.8);
-              vec3 blackCore = mix(vec3(.008, .009, .012), vec3(.038, .027, .032), pow(lightAmount, .8));
-              vec3 bloodRed = vec3(.42, .002, .005);
-              vec3 signalRed = vec3(1.0, .018, .011);
-              vec3 colour = mix(blackCore, bloodRed, redMask);
-              colour += signalRed * lightFalloff * (.2 + energy * .48) * (.42 + focalIntensity * 1.45);
-              colour += vec3(.05, .0008, .0015) * rim * lightFalloff;
-              gl_FragColor = vec4(colour, 1.0);
-            }
-          `;
-          const innerMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-              uTime: { value: 0 },
-              uLightDirection: { value: fixedLightDirection }
-            },
-            vertexShader: layerVertex,
-            fragmentShader: innerFragment,
-            extensions: { derivatives: true }
-          });
-          const sharedGeometry = new THREE.IcosahedronGeometry(1, window.innerWidth < 720 ? 3 : 4);
-          const innerCore = new THREE.Mesh(sharedGeometry, innerMaterial);
-          innerCore.scale.setScalar(1.84);
-          innerCore.renderOrder = 0;
-          coreGroup.add(innerCore);
-
-          const outerFragment = `
-            uniform vec3 uLightDirection;
-            varying vec3 vWorldPosition;
-            varying vec3 vViewDirection;
-            void main() {
-              vec3 normalFace = normalize(cross(dFdx(vWorldPosition), dFdy(vWorldPosition)));
-              if (dot(normalFace, vViewDirection) < 0.0) normalFace *= -1.0;
-              float lightAmount = max(0.0, dot(normalFace, uLightDirection));
-              float redRegion = smoothstep(.46, .92, lightAmount);
-              float lightFalloff = pow(redRegion, 2.6);
-              float reflectionField = pow(redRegion, 1.15);
-              float specularAlignment = lightAmount;
-              float specular = pow(specularAlignment, 68.0) * lightFalloff;
-              float broadReflection = pow(specularAlignment, 7.0) * lightFalloff;
-              float fullReflection = smoothstep(.9817, .9925, specularAlignment);
-              float rim = pow(1.0 - max(0.0, dot(normalFace, normalize(vViewDirection))), 3.5);
-              vec3 shellBlack = mix(vec3(.012, .014, .018), vec3(.05, .054, .062), pow(lightAmount, .72));
-              vec3 reflection = vec3(.46, .42, .4) * reflectionField * (.12 + lightAmount * .55);
-              reflection += vec3(1.0, .94, .9) * specular * 3.2;
-              reflection += vec3(.58, .035, .038) * broadReflection;
-              reflection += vec3(.16, .17, .19) * pow(lightAmount, 2.0) * .38 * (1.0 - lightFalloff);
-              reflection += vec3(.07, .01, .014) * rim * .22;
-              vec3 shellColour = mix(shellBlack + reflection, vec3(1.65, 1.48, 1.3), fullReflection);
-              float baseAlpha = clamp(mix(.82, .05, lightFalloff) + specular * .16, .16, .88);
-              float alpha = mix(baseAlpha, .80, fullReflection);
-              gl_FragColor = vec4(shellColour, alpha);
-            }
-          `;
-          const outerMaterial = new THREE.ShaderMaterial({
-            uniforms: { uLightDirection: { value: fixedLightDirection } },
-            vertexShader: layerVertex,
-            fragmentShader: outerFragment,
-            extensions: { derivatives: true },
-            transparent: true,
-            depthWrite: false
-          });
-          const outerShell = new THREE.Mesh(sharedGeometry, outerMaterial);
-          outerShell.scale.setScalar(1.9);
-          outerShell.renderOrder = 1;
-          coreGroup.add(outerShell);
-
-          const starPositions = [];
-          for (let index = 0; index < 74; index += 1) {
-            const angle = index * 2.399963;
-            const radius = 4.2 + ((index * 17) % 100) / 21;
-            starPositions.push(Math.cos(angle) * radius, Math.sin(angle) * radius * .82, -3 - (index % 3));
-          }
-          const stars = new THREE.BufferGeometry();
-          stars.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
-          scene.add(new THREE.Points(stars, new THREE.PointsMaterial({ color: 0xf7f4e8, size: .018, transparent: true, opacity: .55, depthWrite: false })));
-
-          const resize = () => {
-            const { width, height } = hero.getBoundingClientRect();
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-            renderer.setSize(width, height, false);
-          };
-          window.addEventListener('resize', resize, { passive: true });
-          resize();
-          hero.classList.add('is-webgl');
-
-          let frameId = 0;
-          let active = !document.hidden;
-          const render = (time) => {
-            if (!active) return;
-            const seconds = time * .001;
-            camera.lookAt(0, 0, 0);
-            coreGroup.rotation.y = -seconds * .035;
-            coreGroup.rotation.x = Math.sin(seconds * .12) * .018;
-            innerMaterial.uniforms.uTime.value = seconds;
-            renderer.render(scene, camera);
-            frameId = requestAnimationFrame(render);
-          };
-          const handleVisibility = () => {
-            active = !document.hidden;
-            if (active && !frameId) frameId = requestAnimationFrame(render);
-            if (!active && frameId) { cancelAnimationFrame(frameId); frameId = 0; }
-          };
-          document.addEventListener('visibilitychange', handleVisibility);
-          frameId = requestAnimationFrame(render);
-        } catch (error) {
-          console.warn('Atlas WebGL fallback enabled.', error);
+      const audioReactive = window.AtlasAudio.mount(document.querySelector('[data-atlas-audio]'));
+      const atlasCores = [
+        window.AtlasCore.mount({ readAudio: audioReactive.read }),
+        window.AtlasCore.mount({
+          hero: document.querySelector('[data-orb-core]'),
+          canvas: document.querySelector('[data-orb-core-canvas]'),
+          readAudio: audioReactive.read
+        })
+      ];
+      addEventListener('pagehide', event => {
+        audioReactive.pause();
+        if (!event.persisted) {
+          atlasCores.forEach(core => core?.destroy());
+          audioReactive.destroy();
         }
-        }
-      };
-      window.AtlasCore.mount();
-      window.AtlasCore.mount({
-        hero: document.querySelector('[data-orb-core]'),
-        canvas: document.querySelector('[data-orb-core-canvas]')
       });
       window.AtlasLoader.mountAll();
 
