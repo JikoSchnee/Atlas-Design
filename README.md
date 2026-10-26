@@ -1,31 +1,40 @@
 # Atlas Design
 
-Atlas Design is a visual study and a collection of standalone web components inspired by the Atlas aesthetic from *No Man's Sky*.
+A visual study and standalone web components inspired by the Atlas aesthetic from *No Man's Sky*.
+
+## Live site
+
+[Open Atlas Design](https://jikoschnee.github.io/Atlas-Design/)
+
+[Open the chromatic study directly](https://jikoschnee.github.io/Atlas-Design/color-study.html)
+
+## Reference preview
+
+Screenshot of the chromatic study, including the Atlas sphere, color palette, and portal glyphs.
+
+![Atlas chromatic study](docs/preview.png)
 
 ## Contents
 
-- `color-study.html` — the complete visual study
-- `components/atlas-core` — WebGL Atlas sphere
-- `components/atlas-loader-core` — radial loading core
-- `components/atlas-loader` — composed Atlas loading visualization
-- `DESIGN.md` — design language and implementation notes
+- `index.html` — redirects to the chromatic study.
+- `color-study.html` — the complete visual study.
+- `components/atlas-core` — WebGL Atlas sphere.
+- `components/atlas-loader-core` — radial loading core.
+- `components/atlas-loader` — composed loading visualization.
+- `DESIGN.md` — design language and implementation notes.
 
-## Preview
-
-The color study is published at [jikoschnee.github.io/Atlas-Design](https://jikoschnee.github.io/Atlas-Design/).
-
-GitHub Pages deploys the static site automatically after every push to `main`.
-
-### Local preview
-
-Serve the repository with any static file server, then open `color-study.html`:
+## Local preview
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Individual component demos are available from each component's `index.html`.
+Open `http://localhost:8000/`. Individual component demos are available from each component's `index.html`. The demos use the local `vendor/three.min.js`; no installation or build step is required.
 
-## Dependencies
+## Deployment
 
-The demos use the vendored `vendor/three.min.js`, so no package installation or build step is required.
+GitHub Actions publishes the repository to GitHub Pages after each push to `main`. The workflow can also be run manually.
+
+## Design references
+
+Atlas Path imagery from the official [No Man's Sky OMEGA Update](https://www.nomanssky.com/omega-update/) and historical Atlas Interface captures informed the palette and luminous boundaries. No Man's Sky imagery and related marks belong to their respective owners.
