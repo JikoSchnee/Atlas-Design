@@ -61,20 +61,18 @@
       .atlas-hero { isolation: isolate; position: relative; display: grid; min-height: 100svh; place-items: center; overflow: hidden; background: #040509; }
       #atlas-canvas { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s ease; }
       .atlas-hero.is-webgl #atlas-canvas { opacity: 1; }
-      .atlas-audio { position: absolute; z-index: 3; right: clamp(16px, 3vw, 40px); bottom: 24px; left: clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 12px 20px; flex-wrap: wrap; padding: 14px 18px; border: 1px solid rgba(247,244,232,.23); background: rgba(4,5,9,.88); color: var(--star); font-size: 11px; }
-      .atlas-audio .audio-button { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; min-height: 40px; padding: 10px 14px; overflow: visible; border: 1px solid rgba(247,244,232,.4); color: var(--star); background: transparent; font: inherit; text-align: center; cursor: pointer; transform: none; }
-      .atlas-audio .audio-button::after { content: none; }
-      .atlas-audio .audio-button:hover { border-color: var(--corona); outline: none; }
-      .atlas-audio .audio-button:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
-      .atlas-audio .audio-button:disabled { opacity: .4; cursor: default; }
-      .audio-file { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-      .audio-file:focus-visible + label { outline: 2px solid var(--ice); outline-offset: 3px; }
-      .audio-track { flex: 1 1 160px; min-width: 0; display: grid; gap: 5px; }
-      .audio-track strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 300; }
-      .audio-status { color: #bdc4cb; font-size: 10px; line-height: 1.5; }
-      .audio-volume { display: flex; align-items: center; gap: 10px; }
-      .audio-volume input { width: 100px; accent-color: var(--corona); }
-      @media (max-width: 540px) { .atlas-audio { gap: 8px 12px; padding: 10px 12px; bottom: 16px; } .audio-track { flex-basis: calc(100% - 180px); } .audio-volume { margin-left: auto; } }
+      .atlas-audio { position: absolute; z-index: 3; top: clamp(16px, 3vw, 40px); left: clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 12px; height: 44px; color: var(--star); }
+      .atlas-audio .audio-mute { display: grid; place-items: center; width: 44px; height: 44px; min-height: 0; padding: 0; overflow: visible; border: 0; color: inherit; background: transparent; cursor: pointer; transform: none; }
+      .atlas-audio .audio-mute::after { content: none; }
+      .atlas-audio .audio-mute svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+      .atlas-audio .audio-mute:hover { color: var(--corona); outline: none; }
+      .atlas-audio .audio-mute:focus-visible { outline: 1px solid var(--ice); outline-offset: 4px; }
+      .atlas-audio .audio-mute:disabled { opacity: .4; cursor: default; }
+      .audio-mute [data-sound-off], .audio-mute.is-muted [data-sound-on] { display: none; }
+      .audio-mute.is-muted [data-sound-off] { display: inline; }
+      .atlas-audio input[type="range"] { width: clamp(64px, 10vw, 100px); height: 24px; margin: 0; accent-color: var(--star); cursor: pointer; }
+      .atlas-audio input[type="range"]:focus-visible { outline: 1px solid var(--ice); outline-offset: 4px; }
+      .audio-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
       .atlas-github { position: absolute; z-index: 3; top: clamp(16px, 3vw, 40px); right: clamp(16px, 3vw, 40px); display: grid; place-items: center; width: 44px; height: 44px; color: var(--star); }
       .atlas-github svg { width: 24px; height: 24px; fill: currentColor; }
@@ -157,16 +155,18 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297C5.37.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.043-1.61-4.043-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.305.762-1.605-2.665-.303-5.467-1.334-5.467-5.93 0-1.31.469-2.38 1.236-3.22-.124-.303-.536-1.524.118-3.176 0 0 1.008-.322 3.301 1.23A11.52 11.52 0 0112 6.101c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.656 1.652.244 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.597 24 12.297c0-6.627-5.373-12-12-12" /></svg>
         </a>
         <div class="atlas-fallback" aria-hidden="true"></div>
-        <section class="atlas-audio" data-atlas-audio aria-label="Audio reactive controls">
-          <input class="audio-file" id="atlas-audio-file" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac" />
-          <label class="audio-button" for="atlas-audio-file">Choose music</label>
-          <button class="audio-button" type="button" data-audio-play disabled>Play</button>
-          <div class="audio-track">
-            <strong data-audio-track>No track selected</strong>
-            <span class="audio-status" data-audio-status role="status">Local playback only. Your music stays on this device.</span>
-          </div>
-          <label class="audio-volume">Volume <input data-audio-volume type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Audio volume" /></label>
-        </section>
+        <div class="atlas-audio" data-atlas-audio role="group" aria-label="Music controls">
+          <audio data-audio-track src="./assets/audio/end-of-the-world-sun.mp3" autoplay loop preload="auto" hidden></audio>
+          <button class="audio-mute" type="button" data-audio-mute aria-label="Mute music" aria-pressed="false" title="Mute music">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 5 6 9H3v6h3l5 4Z" />
+              <g data-sound-on><path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" /></g>
+              <g data-sound-off><path d="m16 9 6 6m0-6-6 6" /></g>
+            </svg>
+          </button>
+          <input data-audio-volume type="range" min="0" max="1" step="0.01" value="0.7" aria-label="Music volume" title="Music volume" />
+          <span class="audio-status" data-audio-status role="status">Loading music.</span>
+        </div>
         <div class="atlas-telemetry" aria-hidden="true"><span>ATLAS // CORE</span><strong>16 // 16 // 16</strong><span>SIMULATION: ACTIVE</span></div>
         <div class="atlas-copy"><p class="eyebrow">The creator // Atlas interface</p><h2>ATLAS</h2></div>
         <a class="hero-scroll" href="#research">Scroll to signal</a>
@@ -301,6 +301,9 @@
           atlasCores.forEach(core => core?.destroy());
           audioReactive.destroy();
         }
+      });
+      addEventListener('pageshow', event => {
+        if (event.persisted) audioReactive.start();
       });
       window.AtlasLoader.mountAll();
 

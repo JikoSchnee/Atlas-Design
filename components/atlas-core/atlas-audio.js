@@ -1,38 +1,43 @@
-/* One local audio player and analyser, shared by every Atlas Core instance. */
+/* One streaming soundtrack and analyser, shared by every Atlas Core instance. */
 window.AtlasAudio = {
   mount(root) {
-    const input = root.querySelector('input[type="file"]');
-    const play = root.querySelector('[data-audio-play]');
+    const audio = root.querySelector('[data-audio-track]');
+    const mute = root.querySelector('[data-audio-mute]');
     const volume = root.querySelector('[data-audio-volume]');
-    const track = root.querySelector('[data-audio-track]');
     const status = root.querySelector('[data-audio-status]');
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     const events = new AbortController();
-    let context, gain, analyser, bins, waveform, buffer, source;
-    let offset = 0, startedAt = 0, revision = 0, destroyed = false;
-    let previousTime = null, sampledAt = null;
+    const unlockEvents = new AbortController();
+    let context, gain, analyser, mediaSource, bins, waveform;
+    let destroyed = false, pending = null, previousTime = null, sampledAt = null;
+    let lastVolume = Number(volume.value) || .7;
     const signal = { innerBass: 0, outerBass: 0, innerEnergy: 0, outerEnergy: 0 };
+    audio.volume = Number(volume.value);
 
-    const setStatus = text => { status.textContent = text; };
-    const stopSource = () => {
-      const old = source;
-      source = null;
-      if (old) {
-        old.onended = null;
-        old.stop();
-        old.disconnect();
+    const updateState = () => {
+      if (destroyed) return;
+      const isMuted = audio.muted || Number(volume.value) === 0;
+      mute.classList.toggle('is-muted', isMuted);
+      mute.setAttribute('aria-pressed', String(isMuted));
+      const label = isMuted ? 'Unmute music' : 'Mute music';
+      mute.setAttribute('aria-label', label);
+      mute.title = label;
+      if (audio.error) {
+        root.dataset.playback = 'error';
+        status.textContent = 'Music could not load. Reload the page to try again.';
+        mute.disabled = true;
+        volume.disabled = true;
+      } else if (!audio.paused && (!context || context.state === 'running')) {
+        root.dataset.playback = 'playing';
+        status.textContent = isMuted ? 'Music muted.' : 'Playing End of the World Sun by 65daysofstatic.';
+        unlockEvents.abort();
+      } else {
+        root.dataset.playback = 'waiting';
+        status.textContent = 'Music will start after your first interaction.';
       }
-      play.textContent = 'Play';
-      play.setAttribute('aria-pressed', 'false');
-    };
-    const pause = () => {
-      if (!source) return;
-      offset = Math.min(buffer.duration, offset + context.currentTime - startedAt);
-      stopSource();
-      setStatus('Paused. Select Play to continue.');
     };
     const ensureContext = () => {
-      if (context) return;
+      if (context || !AudioContextClass) return;
       context = new AudioContextClass();
       gain = context.createGain();
       gain.gain.value = Number(volume.value);
@@ -41,82 +46,54 @@ window.AtlasAudio = {
       analyser.smoothingTimeConstant = 0;
       bins = new Uint8Array(analyser.frequencyBinCount);
       waveform = new Float32Array(analyser.fftSize);
+      mediaSource = context.createMediaElementSource(audio);
+      mediaSource.connect(gain);
       gain.connect(analyser);
       analyser.connect(context.destination);
+      audio.volume = 1;
+      context.addEventListener('statechange', updateState, { signal: events.signal });
     };
-    const selectFile = async () => {
-      const file = input.files[0];
-      if (!file || destroyed) return;
-      const selection = ++revision;
-      stopSource();
-      buffer = null;
-      offset = 0;
-      play.disabled = true;
-      track.textContent = file.name;
-      track.title = file.name;
-      setStatus('Loading local audio…');
+    const start = () => {
+      if (destroyed || audio.error) return Promise.resolve();
+      // Resume is invoked synchronously inside the gesture, even when a prior
+      // autoplay play() call is still waiting for the soundtrack to buffer.
       try {
         ensureContext();
-        const decoded = await context.decodeAudioData(await file.arrayBuffer());
-        if (destroyed || selection !== revision) return;
-        if (!decoded.duration) throw new Error('Empty audio');
-        buffer = decoded;
-        play.disabled = false;
-        setStatus('Ready. Select Play to start.');
+        if (context && context.state !== 'running') context.resume().then(updateState).catch(updateState);
+        if (pending) return pending;
+        pending = audio.play().then(updateState).catch(updateState).finally(() => { pending = null; });
+        return pending;
       } catch {
-        if (destroyed || selection !== revision) return;
-        setStatus('Unable to decode this file. Try an MP3, WAV, or M4A file.');
-      } finally {
-        // Allow selecting the same file again, including after a decode failure.
-        if (!destroyed && selection === revision) input.value = '';
+        updateState();
+        return Promise.resolve();
       }
     };
-    const toggle = async () => {
-      if (!buffer || destroyed) return;
-      if (source) { pause(); return; }
-      const selection = revision;
-      play.disabled = true;
-      try {
-        // Called directly by a click: Safari requires a user gesture to resume.
-        await context.resume();
-        if (destroyed || selection !== revision) return;
-        if (context.state !== 'running') throw new Error('Audio unavailable');
-        if (offset >= buffer.duration) offset = 0;
-        const next = context.createBufferSource();
-        next.buffer = buffer;
-        next.connect(gain);
-        next.onended = () => {
-          if (source !== next) return;
-          source = null;
-          next.disconnect();
-          offset = 0;
-          play.textContent = 'Play';
-          play.setAttribute('aria-pressed', 'false');
-          setStatus('Track ended. Select Play to replay.');
-        };
-        source = next;
-        startedAt = context.currentTime;
-        next.start(0, offset);
-        play.textContent = 'Pause';
-        play.setAttribute('aria-pressed', 'true');
-        setStatus('Playing locally. Both cores follow this track.');
-      } catch {
-        if (!destroyed && selection === revision) {
-          stopSource();
-          setStatus('Playback could not start. Select Play to try again.');
-        }
-      } finally {
-        if (!destroyed && selection === revision) play.disabled = !buffer;
+    const updateVolume = () => {
+      const value = Number(volume.value);
+      if (value > 0) {
+        lastVolume = value;
+        audio.muted = false;
       }
+      if (gain) gain.gain.setTargetAtTime(value, context.currentTime, .015);
+      else audio.volume = value;
+      updateState();
+      start();
+    };
+    const toggleMute = () => {
+      if (audio.muted || Number(volume.value) === 0) {
+        audio.muted = false;
+        if (Number(volume.value) === 0) { volume.value = String(lastVolume); updateVolume(); }
+      } else audio.muted = true;
+      updateState();
+      start();
     };
     const read = time => {
-      // rAF gives both cores the same timestamp: sample and smooth only once.
       if (sampledAt === time) return signal;
       sampledAt = time;
       const dt = previousTime === null ? 1 / 60 : Math.max(0, Math.min(.1, (time - previousTime) / 1000));
       previousTime = time;
       let bass = 0, energy = 0;
-      if (!destroyed && source && context.state === 'running' && Number(volume.value) > 0) {
+      if (!destroyed && analyser && context.state === 'running' && !audio.paused && !audio.muted && Number(volume.value) > 0) {
         analyser.getByteFrequencyData(bins);
         analyser.getFloatTimeDomainData(waveform);
         const binHz = context.sampleRate / analyser.fftSize;
@@ -137,31 +114,29 @@ window.AtlasAudio = {
       smooth('outerEnergy', energy, .16, .45);
       return signal;
     };
-    const updateVolume = () => {
-      if (gain) gain.gain.setTargetAtTime(Number(volume.value), context.currentTime, .015);
-    };
-    input.addEventListener('change', selectFile, { signal: events.signal });
-    play.addEventListener('click', toggle, { signal: events.signal });
+    mute.addEventListener('click', toggleMute, { signal: events.signal });
     volume.addEventListener('input', updateVolume, { signal: events.signal });
-    play.setAttribute('aria-pressed', 'false');
-    if (!AudioContextClass) {
-      input.disabled = true;
-      setStatus('Audio analysis is unavailable in this browser.');
-    }
+    for (const name of ['playing', 'pause', 'error', 'volumechange']) audio.addEventListener(name, updateState, { signal: events.signal });
+    for (const name of ['pointerdown', 'keydown']) document.addEventListener(name, start, { capture: true, signal: unlockEvents.signal });
+    start();
     return {
       read,
-      pause,
+      start,
+      pause() { audio.pause(); },
       destroy() {
         if (destroyed) return;
         destroyed = true;
-        revision++;
         events.abort();
-        stopSource();
-        buffer = null;
+        unlockEvents.abort();
+        audio.pause();
+        audio.removeAttribute('src');
+        audio.load();
+        mediaSource?.disconnect();
         gain?.disconnect();
         analyser?.disconnect();
         if (context && context.state !== 'closed') context.close().catch(() => {});
-        play.disabled = true;
+        mute.disabled = true;
+        volume.disabled = true;
       }
     };
   }

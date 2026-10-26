@@ -33,13 +33,15 @@ Open `http://localhost:8000/`. Individual component demos are available from eac
 
 ## Audio reactive mode
 
-Choose a local music file in the first screen's audio controls, then select **Play**. Use **Pause** to resume later, or adjust **Volume**, including zero to mute. Selecting another file stops the current track and prepares the new one without autoplay.
+The page plays **65daysofstatic — End of the World Sun** on a loop. The supplied MP3 is served from `assets/audio/end-of-the-world-sun.mp3`. Music credit belongs to 65daysofstatic.
 
-Both Atlas spheres share one local Web Audio player and analyser. Bass drives subtle breathing; overall energy lifts the red light. The inner core follows quickly (40 ms attack / 180 ms release), while the shell and its contours respond more softly (160 ms attack / 450 ms release). Rotation remains shared. Pausing, muting, or reaching the end smoothly restores the idle appearance.
+The upper-left speaker button mutes/unmutes music; the adjacent slider adjusts volume (default 70%). These controls mirror the upper-right GitHub link without affecting the sphere's layout. The upload and playback panel has been removed.
 
-Audio is decoded on this device and is never uploaded. Format support depends on the browser; MP3, WAV, or M4A are good starting points. Safari requires selecting Play to enable audio. Reduced-motion settings keep the static fallback, even while music plays.
+The page attempts playback on load. Browsers that block audible autoplay start music after the first click, tap, or keyboard interaction. No microphone or third-party audio service is used.
 
-`AtlasCore.mount({ hero, canvas, readAudio })` accepts an optional shared signal reader, called with the animation timestamp. It returns normalized `innerBass`, `outerBass`, `innerEnergy`, and `outerEnergy` values (0–1). Omit the reader for the original idle animation. The returned `destroy()` handle releases rendering resources; `AtlasAudio.mount(root)` returns `read`, `pause`, and `destroy` for the shared player.
+Both Atlas spheres share one Web Audio player and analyser. Bass drives subtle breathing; overall energy lifts the red light. The inner core follows quickly (40 ms attack / 180 ms release), while the shell and its contours respond more softly (160 ms attack / 450 ms release). Rotation remains shared. Muting smoothly restores the idle appearance. Reduced-motion settings keep the static fallback.
+
+`AtlasCore.mount({ hero, canvas, readAudio })` accepts an optional shared signal reader, called with the animation timestamp. The reader returns normalized `innerBass`, `outerBass`, `innerEnergy`, and `outerEnergy` values (0–1). Omit the reader for the original idle animation. The returned `destroy()` handle releases rendering resources; `AtlasAudio.mount(root)` returns `read`, `start`, `pause`, and `destroy` for the shared player.
 
 ## Deployment
 
