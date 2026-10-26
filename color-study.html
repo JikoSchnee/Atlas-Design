@@ -61,6 +61,10 @@
       .atlas-hero { isolation: isolate; position: relative; display: grid; min-height: 100svh; place-items: center; overflow: hidden; background: #040509; }
       #atlas-canvas { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s ease; }
       .atlas-hero.is-webgl #atlas-canvas { opacity: 1; }
+      .atlas-github { position: absolute; z-index: 3; top: clamp(16px, 3vw, 40px); right: clamp(16px, 3vw, 40px); display: grid; place-items: center; width: 44px; height: 44px; color: var(--star); }
+      .atlas-github svg { width: 24px; height: 24px; fill: currentColor; }
+      .atlas-github:hover { color: var(--corona); }
+      .atlas-github:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
       .atlas-fallback { position: absolute; z-index: 1; width: min(46vw, 46vh); aspect-ratio: 1; border-radius: 48% 52% 55% 45% / 52% 43% 57% 48%; background: radial-gradient(circle at 34% 28%, #37404b, #0d0f14 38%, #030407 68%); box-shadow: inset -24px -20px 42px #000; transition: opacity .5s ease; }
       .atlas-fallback::before { position: absolute; inset: -21%; content: ""; clip-path: polygon(50% 0%, 76% 10%, 100% 42%, 90% 76%, 57% 100%, 18% 91%, 0% 57%, 12% 18%); background: linear-gradient(135deg, rgba(255, 111, 89, .86), rgba(94, 3, 17, .08) 64%); opacity: .64; animation: fallback-drift 11s linear infinite; }
       .atlas-hero.is-webgl .atlas-fallback { opacity: 0; }
@@ -134,6 +138,9 @@
     <main class="frame">
       <section class="atlas-hero" id="atlas-core" data-component="AtlasCore" data-atlas-core aria-label="Atlas Core: isolated black and red low-poly sphere">
         <canvas id="atlas-canvas" aria-hidden="true"></canvas>
+        <a class="atlas-github" href="https://github.com/JikoSchnee/Atlas-Design" target="_blank" rel="noopener noreferrer" aria-label="View Atlas Design on GitHub" title="View Atlas Design on GitHub">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297C5.37.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.043-1.61-4.043-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.838 1.237 1.838 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.305.762-1.605-2.665-.303-5.467-1.334-5.467-5.93 0-1.31.469-2.38 1.236-3.22-.124-.303-.536-1.524.118-3.176 0 0 1.008-.322 3.301 1.23A11.52 11.52 0 0112 6.101c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.656 1.652.244 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.597 24 12.297c0-6.627-5.373-12-12-12" /></svg>
+        </a>
         <div class="atlas-fallback" aria-hidden="true"></div>
         <div class="atlas-telemetry" aria-hidden="true"><span>ATLAS // CORE</span><strong>16 // 16 // 16</strong><span>SIMULATION: ACTIVE</span></div>
         <div class="atlas-copy"><p class="eyebrow">The creator // Atlas interface</p><h2>ATLAS</h2></div>
